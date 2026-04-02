@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harness Engineering 自学指南 | tia0022</title>
+  <meta name="description" content="系统学习 Harness Engineering —— AI Agent 基础设施工程的完整自学指南" />
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --bg: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-card2: #16213e;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --border: #2d2d4e;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(15,15,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 1.1rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .lang-btn {
+      padding: 0.3rem 0.8rem; border-radius: 20px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse at top left, rgba(99,102,241,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at bottom right, rgba(6,182,212,0.1) 0%, transparent 60%);
+    }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .hero-tag {
+      display: inline-block; padding: 0.3rem 1rem;
+      background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 20px; font-size: 0.8rem; color: var(--primary); margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800; line-height: 1.2; margin-bottom: 1.2rem;
+    }
+    .hero h1 span { background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.75rem 1.8rem; border-radius: 8px;
+      font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; display: inline-block;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; border: none;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+    .hero-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.5rem; font-family: 'Courier New', monospace; font-size: 0.85rem;
+      line-height: 1.8;
+    }
+    .code-line { display: block; }
+    .code-comment { color: #6272a4; }
+    .code-keyword { color: #ff79c6; }
+    .code-fn { color: #50fa7b; }
+    .code-str { color: #f1fa8c; }
+    .code-var { color: #8be9fd; }
+    .code-indent { padding-left: 1.5rem; }
+    .code-indent2 { padding-left: 3rem; }
+
+    /* STATS */
+    .stats {
+      padding: 4rem 2rem;
+      background: var(--bg-card2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 2.5rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    /* SECTION GENERIC */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block; padding: 0.3rem 1rem;
+      background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3);
+      border-radius: 20px; font-size: 0.8rem; color: var(--accent); margin-bottom: 1rem;
+    }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1rem; }
+    .section-sub { color: var(--text-muted); max-width: 600px; margin-bottom: 3rem; font-size: 1rem; }
+
+    /* DEFINITION */
+    .def-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .def-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem;
+    }
+    .def-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .def-card h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+    .def-card p { color: var(--text-muted); font-size: 0.95rem; }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.1));
+      border: 1px solid rgba(99,102,241,0.3); border-radius: var(--radius);
+      padding: 2rem; margin-top: 2rem; text-align: center;
+    }
+    .highlight-box blockquote { font-size: 1.2rem; font-style: italic; color: var(--text); }
+    .highlight-box cite { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; display: block; }
+
+    /* COMPARE TABLE */
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .compare-table th {
+      background: rgba(99,102,241,0.15); padding: 1rem 1.5rem;
+      text-align: left; font-weight: 600; border-bottom: 2px solid var(--primary);
+    }
+    .compare-table th:first-child { border-radius: 8px 0 0 0; }
+    .compare-table th:last-child { border-radius: 0 8px 0 0; }
+    .compare-table td {
+      padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border);
+      font-size: 0.92rem; vertical-align: top;
+    }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .compare-table .dim { color: var(--text-muted); font-weight: 600; font-size: 0.85rem; }
+    .compare-table .old { color: #f87171; }
+    .compare-table .new { color: #34d399; }
+
+    /* COMPONENTS */
+    .components-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .comp-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.8rem;
+      transition: transform 0.2s, border-color 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .comp-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+    .comp-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+    .comp-num {
+      font-size: 0.75rem; color: var(--primary); font-weight: 700;
+      margin-bottom: 0.8rem; letter-spacing: 0.1em;
+    }
+    .comp-card h3 { font-size: 1.05rem; margin-bottom: 0.6rem; }
+    .comp-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+    .comp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .comp-tag {
+      padding: 0.2rem 0.6rem; border-radius: 4px;
+      background: rgba(99,102,241,0.15); color: var(--primary);
+      font-size: 0.75rem; font-family: monospace;
+    }
+
+    /* LEARNING PATH */
+    .path-timeline { position: relative; padding-left: 2.5rem; }
+    .path-timeline::before {
+      content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(180deg, var(--primary), var(--accent));
+    }
+    .path-step { position: relative; margin-bottom: 2.5rem; }
+    .path-dot {
+      position: absolute; left: -2.1rem; top: 0.3rem;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--primary); border: 2px solid var(--bg);
+    }
+    .path-dot.accent { background: var(--accent); }
+    .path-dot.success { background: var(--success); }
+    .path-step-inner {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+    }
+    .path-meta { display: flex; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .path-badge {
+      padding: 0.2rem 0.7rem; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 600;
+    }
+    .badge-beginner { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge-intermediate { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge-advanced { background: rgba(99,102,241,0.15); color: var(--primary); }
+    .path-step-inner h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .path-step-inner p { color: var(--text-muted); font-size: 0.9rem; }
+    .path-resources { margin-top: 0.8rem; }
+    .path-resources a {
+      display: inline-block; margin: 0.2rem 0.4rem 0.2rem 0;
+      color: var(--accent); font-size: 0.85rem; text-decoration: none;
+    }
+    .path-resources a:hover { text-decoration: underline; }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .tl-item { display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem; padding-bottom: 2rem; position: relative; }
+    .tl-item::before {
+      content: ''; position: absolute; left: 108px; top: 24px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .tl-item:last-child::before { display: none; }
+    .tl-year {
+      text-align: right; color: var(--primary); font-weight: 700;
+      padding-top: 0.2rem; font-size: 0.9rem;
+    }
+    .tl-dot {
+      position: absolute; left: 104px; top: 6px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--primary); border: 2px solid var(--bg);
+    }
+    .tl-content h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .tl-content p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* RESOURCES */
+    .resources-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .res-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .res-icon {
+      width: 44px; height: 44px; border-radius: 8px;
+      background: rgba(99,102,241,0.15); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .res-content h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .res-content p { color: var(--text-muted); font-size: 0.85rem; }
+    .res-link { color: var(--accent); text-decoration: none; font-size: 0.82rem; margin-top: 0.3rem; display: inline-block; }
+    .res-link:hover { text-decoration: underline; }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .checklist li {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem;
+    }
+    .check-icon { color: var(--success); font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .checklist li span { font-size: 0.9rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg-card2); border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+    }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+    .footer-brand p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.8rem; }
+    footer h4 { font-size: 0.95rem; margin-bottom: 1rem; }
+    footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    footer ul a { color: var(--text-muted); text-decoration: none; font-size: 0.88rem; }
+    footer ul a:hover { color: var(--text); }
+    .footer-bottom {
+      text-align: center; padding-top: 2rem; margin-top: 2rem;
+      border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.82rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .def-grid { grid-template-columns: 1fr; }
+      .components-grid { grid-template-columns: 1fr; }
+      .resources-grid { grid-template-columns: 1fr; }
+      .checklist { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* LANG TOGGLE */
+    .zh { display: block; }
+    .en { display: none; }
+    body.lang-en .zh { display: none; }
+    body.lang-en .en { display: block; }
+    .inline-zh, .inline-en { display: inline; }
+    body.lang-en .inline-zh { display: none; }
+    body:not(.lang-en) .inline-en { display: none; }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s, transform 0.6s; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Harness Engineering</div>
+  <div class="nav-links">
+    <a href="#definition"><span class="inline-zh">定义</span><span class="inline-en">What</span></a>
+    <a href="#components"><span class="inline-zh">核心组件</span><span class="inline-en">Components</span></a>
+    <a href="#learning"><span class="inline-zh">学习路径</span><span class="inline-en">Learning Path</span></a>
+    <a href="#resources"><span class="inline-zh">资源</span><span class="inline-en">Resources</span></a>
+    <button class="lang-btn" onclick="toggleLang()">EN / 中文</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">
+        <span class="zh">AI Agent 基础设施工程</span>
+        <span class="en">AI Agent Infrastructure Engineering</span>
+      </div>
+      <h1 class="zh">从 <span>Prompt 工程师</span><br/>到 <span>Harness 工程师</span></h1>
+      <h1 class="en" style="display:none">From <span>Prompt Engineer</span><br/>to <span>Harness Engineer</span></h1>
+      <p class="zh">掌握驾驭 AI Agent 的基础设施设计范式 — 构建可靠、可观测、可扩展的 AI 系统的完整自学指南。</p>
+      <p class="en">Master the infrastructure design paradigm for AI Agents — a complete self-learning guide to building reliable, observable, and scalable AI systems.</p>
+      <div class="btn-group">
+        <a href="#learning" class="btn btn-primary zh">开始学习</a>
+        <a href="#learning" class="btn btn-primary en" style="display:none">Start Learning</a>
+        <a href="#definition" class="btn btn-outline zh">了解概念</a>
+        <a href="#definition" class="btn btn-outline en" style="display:none">Learn Concepts</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+<code><span class="code-comment"># harness_engineering.py</span>
+<span class="code-keyword">class</span> <span class="code-fn">AgentHarness</span>:
+<span class="code-indent"><span class="code-comment"># 核心组件 / Core Components</span></span>
+<span class="code-indent"><span class="code-var">context_manager</span>: ContextManager</span>
+<span class="code-indent"><span class="code-var">tool_orchestrator</span>: ToolOrchestrator</span>
+<span class="code-indent"><span class="code-var">verification_loop</span>: VerificationLoop</span>
+<span class="code-indent"><span class="code-var">memory_store</span>: MemoryPersistence</span>
+<span class="code-indent"><span class="code-var">observability</span>: ObservabilityLayer</span>
+<span class="code-indent"><span class="code-var">safety_controls</span>: SafetyControls</span>
+
+<span class="code-indent"><span class="code-keyword">def</span> <span class="code-fn">run</span>(self, task: str):</span>
+<span class="code-indent2"><span class="code-comment"># 不只是调用模型</span></span>
+<span class="code-indent2"><span class="code-comment"># It's not just calling the model</span></span>
+<span class="code-indent2"><span class="code-keyword">return</span> self.<span class="code-fn">orchestrate</span>(task)</span>
+</code>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-num">73%</div>
+      <div class="stat-label zh">可靠性提升（结构化 Harness）</div>
+      <div class="stat-label en">Reliability gain (structured harness)</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">7</div>
+      <div class="stat-label zh">核心工程组件</div>
+      <div class="stat-label en">Core engineering components</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">2026</div>
+      <div class="stat-label zh">概念正式确立</div>
+      <div class="stat-label en">Concept formally established</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">∞</div>
+      <div class="stat-label zh">AI 系统潜力上限</div>
+      <div class="stat-label en">Potential ceiling of AI systems</div>
+    </div>
+  </div>
+</div>
+
+<!-- DEFINITION -->
+<section id="definition">
+  <div class="container">
+    <div class="section-tag zh">核心定义</div>
+    <div class="section-tag en">Core Definition</div>
+    <h2 class="section-title zh">什么是 Harness Engineering？</h2>
+    <h2 class="section-title en">What is Harness Engineering?</h2>
+    <p class="section-sub zh">Harness Engineering 是围绕 AI 模型设计和构建基础设施的工程范式 — 不是调教模型，而是驾驭模型。</p>
+    <p class="section-sub en">Harness Engineering is an infrastructure design paradigm around AI models — not training models, but harnessing them.</p>
+
+    <div class="def-grid">
+      <div class="def-card reveal">
+        <div class="def-icon">🎯</div>
+        <h3 class="zh">Prompt 工程 vs Harness 工程</h3>
+        <h3 class="en">Prompt vs Harness Engineering</h3>
+        <p class="zh">Prompt 工程关注如何"说服"模型产出期望结果；Harness 工程关注如何构建系统，使模型在该系统中可靠地执行复杂任务。前者是沟通技巧，后者是工程架构。</p>
+        <p class="en">Prompt engineering focuses on "persuading" the model for desired outputs. Harness engineering builds systems in which models reliably execute complex tasks. One is communication, the other is architecture.</p>
+      </div>
+      <div class="def-card reveal">
+        <div class="def-icon">🐎</div>
+        <h3 class="zh">马与缰绳的比喻</h3>
+        <h3 class="en">The Horse & Harness Metaphor</h3>
+        <p class="zh">AI 模型如同一匹强壮却未经驯化的马 — 充满能力，但方向难以控制。Harness（马具）是让这匹马安全、高效、可预期地完成工作的整套基础设施。</p>
+        <p class="en">An AI model is like a powerful but untamed horse — full of capability but hard to direct. The harness is the complete infrastructure that lets this horse work safely, efficiently, and predictably.</p>
+      </div>
+      <div class="def-card reveal">
+        <div class="def-icon">🏗️</div>
+        <h3 class="zh">工程核心关注点</h3>
+        <h3 class="en">Core Engineering Concerns</h3>
+        <p class="zh">上下文管理、工具编排、验证循环、记忆持久化、可观测性、安全控制、架构模式 — 这七个维度构成了完整的 Harness Engineering 体系。</p>
+        <p class="en">Context management, tool orchestration, verification loops, memory persistence, observability, safety controls, and architectural patterns — these seven dimensions form the complete Harness Engineering system.</p>
+      </div>
+      <div class="def-card reveal">
+        <div class="def-icon">📈</div>
+        <h3 class="zh">为什么现在重要</h3>
+        <h3 class="en">Why It Matters Now</h3>
+        <p class="zh">随着 LLM 能力的爆发，瓶颈从"模型够不够聪明"转变为"基础设施能否支撑复杂任务"。Harness Engineering 是下一个十年 AI 工程师的核心竞争力。</p>
+        <p class="en">As LLM capability explodes, the bottleneck has shifted from "is the model smart enough" to "can the infrastructure support complex tasks." Harness Engineering is the core competency of AI engineers for the next decade.</p>
+      </div>
+    </div>
+
+    <div class="highlight-box reveal">
+      <blockquote class="zh">「真正的挑战不在于让模型更聪明，而在于构建让聪明模型正常工作的系统。」</blockquote>
+      <blockquote class="en">"The real challenge is not making the model smarter, but building systems that make smart models work reliably."</blockquote>
+      <cite class="zh">— Harness Engineering 核心理念</cite>
+      <cite class="en">— Core Philosophy of Harness Engineering</cite>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section style="background: var(--bg-card2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-tag zh">对比分析</div>
+    <div class="section-tag en">Comparison</div>
+    <h2 class="section-title zh">Framework vs Harness：关键差异</h2>
+    <h2 class="section-title en">Framework vs Harness: Key Differences</h2>
+    <table class="compare-table reveal">
+      <thead>
+        <tr>
+          <th class="zh">维度</th><th class="en" style="display:none">Dimension</th>
+          <th class="zh">传统 Framework</th><th class="en" style="display:none">Traditional Framework</th>
+          <th class="zh">Harness Engineering</th><th class="en" style="display:none">Harness Engineering</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dim zh">设计哲学</td><td class="dim en" style="display:none">Philosophy</td>
+          <td class="old zh">封装复杂性，提供抽象</td><td class="old en" style="display:none">Encapsulate complexity, provide abstraction</td>
+          <td class="new zh">暴露并管理复杂性，保留控制</td><td class="new en" style="display:none">Expose and manage complexity, retain control</td>
+        </tr>
+        <tr>
+          <td class="dim zh">状态管理</td><td class="dim en" style="display:none">State Management</td>
+          <td class="old zh">框架内部处理</td><td class="old en" style="display:none">Handled internally by framework</td>
+          <td class="new zh">显式持久化，可审计</td><td class="new en" style="display:none">Explicit persistence, auditable</td>
+        </tr>
+        <tr>
+          <td class="dim zh">错误处理</td><td class="dim en" style="display:none">Error Handling</td>
+          <td class="old zh">异常捕获与重试</td><td class="old en" style="display:none">Exception catching and retry</td>
+          <td class="new zh">验证循环 + 降级策略</td><td class="new en" style="display:none">Verification loops + degradation strategy</td>
+        </tr>
+        <tr>
+          <td class="dim zh">可观测性</td><td class="dim en" style="display:none">Observability</td>
+          <td class="old zh">日志 + 基本指标</td><td class="old en" style="display:none">Logs + basic metrics</td>
+          <td class="new zh">全链路追踪 + 推理过程记录</td><td class="new en" style="display:none">Full-chain tracing + reasoning process recording</td>
+        </tr>
+        <tr>
+          <td class="dim zh">安全控制</td><td class="dim en" style="display:none">Safety Controls</td>
+          <td class="old zh">输入验证</td><td class="old en" style="display:none">Input validation</td>
+          <td class="new zh">多层防御 + 行为边界约束</td><td class="new en" style="display:none">Multi-layer defense + behavioral boundary constraints</td>
+        </tr>
+        <tr>
+          <td class="dim zh">可扩展性</td><td class="dim en" style="display:none">Scalability</td>
+          <td class="old zh">水平扩展</td><td class="old en" style="display:none">Horizontal scaling</td>
+          <td class="new zh">任务编排 + 异步并行</td><td class="new en" style="display:none">Task orchestration + async parallel</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- COMPONENTS -->
+<section id="components">
+  <div class="container">
+    <div class="section-tag zh">七大核心组件</div>
+    <div class="section-tag en">Seven Core Components</div>
+    <h2 class="section-title zh">Harness 的完整构成</h2>
+    <h2 class="section-title en">The Complete Harness Architecture</h2>
+    <p class="section-sub zh">掌握这七个核心组件，你就掌握了构建生产级 AI Agent 系统的全部基础。</p>
+    <p class="section-sub en">Master these seven components and you have all the foundations to build production-grade AI agent systems.</p>
+    <div class="components-grid">
+      <div class="comp-card reveal">
+        <div class="comp-num">01 / CONTEXT MANAGEMENT</div>
+        <h3 class="zh">上下文管理</h3>
+        <h3 class="en">Context Management</h3>
+        <p class="zh">精确控制模型"看到"什么信息。包括上下文窗口优化、动态注入、压缩与优先级管理。这是 Agent 智能的"工作记忆"。</p>
+        <p class="en">Precisely control what information the model "sees." Includes context window optimization, dynamic injection, compression and priority management. The "working memory" of agent intelligence.</p>
+        <div class="comp-tags">
+          <span class="comp-tag">context-window</span>
+          <span class="comp-tag">RAG</span>
+          <span class="comp-tag">compression</span>
+        </div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-num">02 / TOOL ORCHESTRATION</div>
+        <h3 class="zh">工具编排</h3>
+        <h3 class="en">Tool Orchestration</h3>
+        <p class="zh">设计 Agent 可调用的工具集，管理工具的注册、权限、执行和结果回馈。工具是 Agent 与外部世界交互的"双手"。</p>
+        <p class="en">Design the toolset available to agents, manage tool registration, permissions, execution, and result feedback. Tools are the "hands" by which agents interact with the external world.</p>
+        <div class="comp-tags">
+          <span class="comp-tag">function-calling</span>
+          <span class="comp-tag">MCP</span>
+          <span class="comp-tag">tool-schema</span>
+        </div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-num">03 / VERIFICATION LOOPS</div>
+        <h3 class="zh">验证循环</h3>
+        <h3 class="en">Verification Loops</h3>
+        <p class="zh">构建自我纠错机制。Agent 的输出需经过验证，不合格则触发重试或降级。这是提升可靠性的关键基础设施。</p>
+        <p class="en">Build self-correction mechanisms. Agent outputs are verified; failures trigger retry or degradation. This is the key infrastructure for improving reliability.</p>
+        <div class="comp-tags">
+          <span class="comp-tag">self-critique</span>
+          <span class="comp-tag">retry-policy</span>
+          <span class="comp-tag">fallback</span>
+        </div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-num">04 / MEMORY PERSISTENCE</div>
+        <h3 class="zh">记忆持久化</h3>
+        <h3 class="en">Memory Persistence</h3>
+        <p class="zh">跨会话保持状态和知识。包括短期工作记忆、长期知识存储、情节记忆和语义检索，使 Agent 具备真正的"经验积累"能力。</p>
+        <p class="en">Maintain state and knowledge across sessions. Includes short-term working memory, long-term knowledge storage, episodic memory, and semantic retrieval, giving agents true "experience accumulation."</p>
+        <div class="comp-tags">
+          <span class="comp-tag">vector-db</span>
+          <span class="comp-tag">episodic</span>
+          <span class="comp-tag">semantic-search</span>
+        </div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-num">05 / OBSERVABILITY</div>
+        <h3 class="zh">可观测性</h3>
+        <h3 class="en">Observability</h3>
+        <p class="zh">让 Agent 的推理过程可见、可测量、可调试。全链路追踪、指标收集、推理日志 — 使"黑盒"变成"玻璃盒"。</p>
+        <p class="en">Make the agent's reasoning process visible, measurable, and debuggable. Full-chain tracing, metric collection, reasoning logs — turning "black box" into "glass box."</p>
+        <div class="comp-tags">
+          <span class="comp-tag">tracing</span>
+          <span class="comp-tag">metrics</span>
+          <span class="comp-tag">LLM-ops</span>
+        </div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-num">06 / SAFETY CONTROLS</div>
+        <h3 class="zh">安全控制</h3>
+        <h3 class="en">Safety Controls</h3>
+        <p class="zh">定义 Agent 的行为边界。输入过滤、输出审核、权限最小化、沙箱隔离 — 在不限制能力的前提下防止意外危害。</p>
+        <p class="en">Define the behavioral boundaries of agents. Input filtering, output auditing, least-privilege, sandbox isolation — preventing accidental harm without limiting capability.</p>
+        <div class="comp-tags">
+          <span class="comp-tag">guardrails</span>
+          <span class="comp-tag">sandboxing</span>
+          <span class="comp-tag">least-privilege</span>
+        </div>
+      </div>
+      <div class="comp-card reveal" style="grid-column: span 1;">
+        <div class="comp-num">07 / ARCHITECTURAL PATTERNS</div>
+        <h3 class="zh">架构模式</h3>
+        <h3 class="en">Architectural Patterns</h3>
+        <p class="zh">ReAct、Plan-and-Execute、Multi-Agent、Supervisor 等经典模式的工程实现。选择合适的架构是 Harness 设计的最高层决策。</p>
+        <p class="en">Engineering implementation of classic patterns: ReAct, Plan-and-Execute, Multi-Agent, Supervisor. Choosing the right architecture is the highest-level decision in harness design.</p>
+        <div class="comp-tags">
+          <span class="comp-tag">ReAct</span>
+          <span class="comp-tag">multi-agent</span>
+          <span class="comp-tag">supervisor</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARNING PATH -->
+<section id="learning" style="background: var(--bg-card2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-tag zh">自学路径</div>
+    <div class="section-tag en">Self-Learning Path</div>
+    <h2 class="section-title zh">从零到 Harness Engineer</h2>
+    <h2 class="section-title en">From Zero to Harness Engineer</h2>
+    <p class="section-sub zh">按照以下学习路径，系统掌握 Harness Engineering 的核心技能。每个阶段都包含具体的学习目标和推荐资源。</p>
+    <p class="section-sub en">Follow this learning path to systematically master Harness Engineering core skills. Each stage includes specific learning objectives and recommended resources.</p>
+    <div class="path-timeline">
+
+      <div class="path-step reveal">
+        <div class="path-dot"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-beginner zh">入门</span>
+            <span class="path-badge badge-beginner en">Beginner</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 1 · 建立基础</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 1 · Build Foundation</span>
+          </div>
+          <h3 class="zh">LLM 基础与 API 使用</h3>
+          <h3 class="en">LLM Basics & API Usage</h3>
+          <p class="zh">理解 LLM 的工作原理、Token 机制、Temperature/Top-P 参数、上下文窗口限制。熟练使用 OpenAI / Anthropic API，能编写基本的提示词。</p>
+          <p class="en">Understand how LLMs work, token mechanics, temperature/top-p parameters, context window limits. Proficiently use OpenAI/Anthropic APIs, write basic prompts.</p>
+          <div class="path-resources">
+            <a href="https://platform.openai.com/docs" target="_blank">OpenAI Docs →</a>
+            <a href="https://docs.anthropic.com" target="_blank">Anthropic Docs →</a>
+            <a href="https://learnprompting.org" target="_blank">Learn Prompting →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-step reveal">
+        <div class="path-dot"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-beginner zh">入门</span>
+            <span class="path-badge badge-beginner en">Beginner</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 2 · 工具调用</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 2 · Tool Calling</span>
+          </div>
+          <h3 class="zh">Function Calling 与工具设计</h3>
+          <h3 class="en">Function Calling & Tool Design</h3>
+          <p class="zh">掌握 Function Calling / Tool Use 机制，学会设计清晰的工具 Schema，理解工具的权限模型与错误处理。用 Python 实现一个带工具的 Agent。</p>
+          <p class="en">Master Function Calling / Tool Use mechanics, learn to design clean tool schemas, understand tool permission models and error handling. Implement an agent with tools in Python.</p>
+          <div class="path-resources">
+            <a href="https://platform.openai.com/docs/guides/function-calling" target="_blank">Function Calling Guide →</a>
+            <a href="https://docs.anthropic.com/en/docs/tool-use" target="_blank">Claude Tool Use →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-step reveal">
+        <div class="path-dot accent"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-intermediate zh">进阶</span>
+            <span class="path-badge badge-intermediate en">Intermediate</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 3 · 上下文工程</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 3 · Context Engineering</span>
+          </div>
+          <h3 class="zh">RAG 与上下文管理系统</h3>
+          <h3 class="en">RAG & Context Management Systems</h3>
+          <p class="zh">构建 RAG（检索增强生成）系统，掌握 Embedding、向量数据库（Chroma/Pinecone/Weaviate）、混合检索策略。设计上下文优先级与压缩机制。</p>
+          <p class="en">Build RAG (Retrieval-Augmented Generation) systems, master embeddings, vector databases (Chroma/Pinecone/Weaviate), hybrid retrieval strategies. Design context priority and compression mechanisms.</p>
+          <div class="path-resources">
+            <a href="https://python.langchain.com/docs/concepts/rag/" target="_blank">LangChain RAG →</a>
+            <a href="https://docs.llamaindex.ai" target="_blank">LlamaIndex Docs →</a>
+            <a href="https://www.trychroma.com" target="_blank">Chroma DB →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-step reveal">
+        <div class="path-dot accent"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-intermediate zh">进阶</span>
+            <span class="path-badge badge-intermediate en">Intermediate</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 4 · Agent 架构</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 4 · Agent Architecture</span>
+          </div>
+          <h3 class="zh">ReAct、Plan-Execute 与 Multi-Agent</h3>
+          <h3 class="en">ReAct, Plan-Execute & Multi-Agent</h3>
+          <p class="zh">深入理解经典 Agent 架构模式：ReAct（推理+行动循环）、Plan-and-Execute（规划与执行分离）、Multi-Agent（多智能体协作）、Supervisor 模式。</p>
+          <p class="en">Deep-dive into classic agent architecture patterns: ReAct (reasoning+acting loops), Plan-and-Execute (planning/execution separation), Multi-Agent (multi-agent collaboration), Supervisor pattern.</p>
+          <div class="path-resources">
+            <a href="https://arxiv.org/abs/2210.03629" target="_blank">ReAct Paper →</a>
+            <a href="https://langchain-ai.github.io/langgraph/" target="_blank">LangGraph →</a>
+            <a href="https://microsoft.github.io/autogen/" target="_blank">AutoGen →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-step reveal">
+        <div class="path-dot success"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-advanced zh">高级</span>
+            <span class="path-badge badge-advanced en">Advanced</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 5 · 生产化</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 5 · Production</span>
+          </div>
+          <h3 class="zh">可观测性、安全与生产部署</h3>
+          <h3 class="en">Observability, Safety & Production Deployment</h3>
+          <p class="zh">构建完整的可观测性栈（LangSmith/Phoenix/Helicone），实现 Guardrails 安全层，掌握 LLM Ops 最佳实践，将 Agent 系统部署到生产环境。</p>
+          <p class="en">Build a complete observability stack (LangSmith/Phoenix/Helicone), implement Guardrails safety layer, master LLM Ops best practices, deploy agent systems to production.</p>
+          <div class="path-resources">
+            <a href="https://smith.langchain.com" target="_blank">LangSmith →</a>
+            <a href="https://github.com/guardrails-ai/guardrails" target="_blank">Guardrails AI →</a>
+            <a href="https://helicone.ai" target="_blank">Helicone →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="path-step reveal">
+        <div class="path-dot success"></div>
+        <div class="path-step-inner">
+          <div class="path-meta">
+            <span class="path-badge badge-advanced zh">高级</span>
+            <span class="path-badge badge-advanced en">Advanced</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="zh">阶段 6 · 专家级</span>
+            <span style="color:var(--text-muted);font-size:0.82rem;" class="en">Stage 6 · Expert</span>
+          </div>
+          <h3 class="zh">Harness 设计模式与系统架构</h3>
+          <h3 class="en">Harness Design Patterns & System Architecture</h3>
+          <p class="zh">设计大规模 Harness 系统，掌握异步工作流、事件驱动架构、状态机管理、多租户隔离。贡献开源项目，输出自己的 Harness 工程实践。</p>
+          <p class="en">Design large-scale harness systems, master async workflows, event-driven architecture, state machine management, multi-tenant isolation. Contribute to open source, produce your own harness engineering practices.</p>
+          <div class="path-resources">
+            <a href="https://github.com/anthropics/anthropic-cookbook" target="_blank">Anthropic Cookbook →</a>
+            <a href="https://modelcontextprotocol.io" target="_blank">MCP Protocol →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="container">
+    <div class="section-tag zh">发展历程</div>
+    <div class="section-tag en">Timeline</div>
+    <h2 class="section-title zh">Harness Engineering 的演化</h2>
+    <h2 class="section-title en">Evolution of Harness Engineering</h2>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-year">2020</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh">Prompt Engineering 兴起</h4>
+          <h4 class="en">Rise of Prompt Engineering</h4>
+          <p class="zh">GPT-3 发布，"Prompt 工程师"概念出现，社区开始探索如何通过提示词激发模型能力。</p>
+          <p class="en">GPT-3 launch, "prompt engineer" concept emerges, community explores how to elicit model capabilities through prompts.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh">Agent 框架爆发</h4>
+          <h4 class="en">Agent Framework Explosion</h4>
+          <p class="zh">LangChain、AutoGPT 等框架涌现，开发者开始构建基于 LLM 的 Agent 系统，基础设施需求初显。</p>
+          <p class="en">LangChain, AutoGPT and similar frameworks emerge. Developers begin building LLM-based agent systems; infrastructure needs become apparent.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh">生产化挑战凸显</h4>
+          <h4 class="en">Production Challenges Emerge</h4>
+          <p class="zh">Agent 系统进入生产，可靠性、安全性、可观测性问题大量涌现。LLM Ops 概念出现，行业认识到基础设施的重要性。</p>
+          <p class="en">Agent systems enter production. Reliability, safety, and observability issues proliferate. LLM Ops concept emerges; industry recognizes infrastructure importance.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2024</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh">工程范式系统化</h4>
+          <h4 class="en">Engineering Paradigm Systematization</h4>
+          <p class="zh">MCP 协议发布，LangGraph、CrewAI 等编排工具成熟，行业开始系统化思考 AI Agent 的工程架构。</p>
+          <p class="en">MCP protocol launched, LangGraph/CrewAI orchestration tools mature, industry begins systematically thinking about AI agent engineering architecture.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2025</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh">Harness Engineering 概念成型</h4>
+          <h4 class="en">Harness Engineering Concept Forms</h4>
+          <p class="zh">AI Agent 能力的爆发推动了基础设施工程从"技巧"升级为"范式"，"上下文工程"与"Harness 工程"概念被广泛讨论。</p>
+          <p class="en">AI agent capability explosion drives infrastructure engineering from "tricks" to "paradigm." "Context engineering" and "harness engineering" concepts widely discussed.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2026</div>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4 class="zh" style="color:var(--primary)">Harness Engineering 正式确立</h4>
+          <h4 class="en" style="color:var(--primary)">Harness Engineering Formally Established</h4>
+          <p class="zh">Harness Engineering 作为独立工程学科被业界正式认可，核心方法论、工具链和最佳实践趋于成熟。</p>
+          <p class="en">Harness Engineering formally recognized as an independent engineering discipline. Core methodology, toolchain, and best practices reach maturity.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources" style="background: var(--bg-card2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-tag zh">学习资源</div>
+    <div class="section-tag en">Resources</div>
+    <h2 class="section-title zh">精选学习资源</h2>
+    <h2 class="section-title en">Curated Learning Resources</h2>
+    <p class="section-sub zh">经过筛选的高质量资源，覆盖 Harness Engineering 的每个核心领域。</p>
+    <p class="section-sub en">Carefully curated high-quality resources covering every core domain of Harness Engineering.</p>
+    <div class="resources-grid">
+      <div class="res-card reveal">
+        <div class="res-icon">📖</div>
+        <div class="res-content">
+          <h4 class="zh">官方文档</h4>
+          <h4 class="en">Official Documentation</h4>
+          <p class="zh">Anthropic、OpenAI 的官方文档是最权威的一手资料，涵盖 Tool Use、Context、Safety 等核心概念。</p>
+          <p class="en">Anthropic and OpenAI official docs are the most authoritative primary sources, covering Tool Use, Context, Safety, and more.</p>
+          <a href="https://docs.anthropic.com" class="res-link" target="_blank">docs.anthropic.com →</a>
+        </div>
+      </div>
+      <div class="res-card reveal">
+        <div class="res-icon">🔧</div>
+        <div class="res-content">
+          <h4 class="zh">LangChain / LangGraph</h4>
+          <h4 class="en">LangChain / LangGraph</h4>
+          <p class="zh">最流行的 Agent 构建框架，有丰富的教程、示例和工程最佳实践。LangGraph 专注有状态多智能体工作流。</p>
+          <p class="en">The most popular agent building frameworks, with rich tutorials, examples, and engineering best practices. LangGraph focuses on stateful multi-agent workflows.</p>
+          <a href="https://langchain-ai.github.io/langgraph/" class="res-link" target="_blank">LangGraph Docs →</a>
+        </div>
+      </div>
+      <div class="res-card reveal">
+        <div class="res-icon">🌐</div>
+        <div class="res-content">
+          <h4 class="zh">Model Context Protocol (MCP)</h4>
+          <h4 class="en">Model Context Protocol (MCP)</h4>
+          <p class="zh">Anthropic 提出的 AI 工具调用开放标准，是 Harness 工具编排的重要基础设施，已成为行业事实标准。</p>
+          <p class="en">Anthropic's open standard for AI tool calling, an important infrastructure for harness tool orchestration, now the de facto industry standard.</p>
+          <a href="https://modelcontextprotocol.io" class="res-link" target="_blank">modelcontextprotocol.io →</a>
+        </div>
+      </div>
+      <div class="res-card reveal">
+        <div class="res-icon">👁️</div>
+        <div class="res-content">
+          <h4 class="zh">LangSmith / Arize Phoenix</h4>
+          <h4 class="en">LangSmith / Arize Phoenix</h4>
+          <p class="zh">LLM 可观测性平台，用于追踪 Agent 的推理过程、评估输出质量、调试复杂的多步骤工作流。</p>
+          <p class="en">LLM observability platforms for tracing agent reasoning, evaluating output quality, and debugging complex multi-step workflows.</p>
+          <a href="https://smith.langchain.com" class="res-link" target="_blank">LangSmith →</a>
+        </div>
+      </div>
+      <div class="res-card reveal">
+        <div class="res-icon">🛡️</div>
+        <div class="res-content">
+          <h4 class="zh">Guardrails AI</h4>
+          <h4 class="en">Guardrails AI</h4>
+          <p class="zh">为 AI 应用添加可靠性和安全性保障的开源框架，支持输入验证、输出格式化和安全策略执行。</p>
+          <p class="en">Open source framework for adding reliability and safety to AI applications, supporting input validation, output formatting, and safety policy enforcement.</p>
+          <a href="https://github.com/guardrails-ai/guardrails" class="res-link" target="_blank">GitHub →</a>
+        </div>
+      </div>
+      <div class="res-card reveal">
+        <div class="res-icon">📚</div>
+        <div class="res-content">
+          <h4 class="zh">Anthropic Cookbook</h4>
+          <h4 class="en">Anthropic Cookbook</h4>
+          <p class="zh">Anthropic 官方出品的实用代码示例集合，包含 RAG、Agent、工具使用等大量生产级 Harness 工程实践。</p>
+          <p class="en">Anthropic's official practical code example collection, containing production-grade harness engineering practices for RAG, Agents, tool use, and more.</p>
+          <a href="https://github.com/anthropics/anthropic-cookbook" class="res-link" target="_blank">GitHub →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section>
+  <div class="container">
+    <div class="section-tag zh">自测清单</div>
+    <div class="section-tag en">Self-Assessment</div>
+    <h2 class="section-title zh">我已经掌握了吗？</h2>
+    <h2 class="section-title en">Have I Mastered It?</h2>
+    <p class="section-sub zh">用这份清单检验你的 Harness Engineering 技能水平。</p>
+    <p class="section-sub en">Use this checklist to assess your Harness Engineering skill level.</p>
+    <ul class="checklist">
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">能解释 Harness Engineering 与 Prompt Engineering 的本质区别</span><span class="en">Can explain the essential difference between Harness and Prompt Engineering</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">能独立实现 Function Calling 并设计合理的工具 Schema</span><span class="en">Can independently implement Function Calling and design reasonable tool schemas</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">能构建基础的 RAG 系统，理解 Chunking 和检索策略</span><span class="en">Can build a basic RAG system and understand chunking and retrieval strategies</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">理解 ReAct 模式，能实现基本的 Agent 推理循环</span><span class="en">Understand the ReAct pattern and can implement a basic agent reasoning loop</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">能为 Agent 系统添加基本的日志追踪和可观测性</span><span class="en">Can add basic logging, tracing, and observability to agent systems</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">理解安全控制的重要性，能实现基本的输入/输出过滤</span><span class="en">Understand the importance of safety controls and can implement basic I/O filtering</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">能设计和实现跨会话的记忆持久化方案</span><span class="en">Can design and implement cross-session memory persistence solutions</span></li>
+      <li class="reveal"><span class="check-icon">✓</span><span class="zh">理解 Multi-Agent 系统的设计权衡，能选择合适的架构模式</span><span class="en">Understand multi-agent system design trade-offs and can choose appropriate architectural patterns</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-brand" style="font-size:1.2rem;">Harness Engineering</div>
+      <p class="zh">AI Agent 基础设施工程自学指南<br/>由 tia0022 构建与维护</p>
+      <p class="en">Self-learning guide for AI Agent infrastructure engineering<br/>Built and maintained by tia0022</p>
+    </div>
+    <div>
+      <h4 class="zh">核心章节</h4>
+      <h4 class="en">Sections</h4>
+      <ul>
+        <li><a href="#definition"><span class="zh">定义与概念</span><span class="en">Definition</span></a></li>
+        <li><a href="#components"><span class="zh">七大组件</span><span class="en">Components</span></a></li>
+        <li><a href="#learning"><span class="zh">学习路径</span><span class="en">Learning Path</span></a></li>
+        <li><a href="#timeline"><span class="zh">发展历程</span><span class="en">Timeline</span></a></li>
+        <li><a href="#resources"><span class="zh">学习资源</span><span class="en">Resources</span></a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="zh">相关链接</h4>
+      <h4 class="en">Links</h4>
+      <ul>
+        <li><a href="https://github.com/tia0022" target="_blank">GitHub: tia0022</a></li>
+        <li><a href="https://modelcontextprotocol.io" target="_blank">MCP Protocol</a></li>
+        <li><a href="https://docs.anthropic.com" target="_blank">Anthropic Docs</a></li>
+        <li><a href="https://warren-wupeng.github.io/harness-engineering/" target="_blank"><span class="zh">参考原站</span><span class="en">Reference Site</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="zh">© 2026 tia0022 · Harness Engineering 自学指南 · 基于 MIT 许可证开源</p>
+    <p class="en">© 2026 tia0022 · Harness Engineering Self-Learning Guide · Open sourced under MIT License</p>
+  </div>
+</footer>
+
+<script>
+  // Language toggle
+  function toggleLang() {
+    document.body.classList.toggle('lang-en');
+    // toggle all inline zh/en
+    document.querySelectorAll('h1.zh, h1.en, h2.zh, h2.en, p.zh, p.en, h3.zh, h3.en, h4.zh, h4.en, blockquote.zh, blockquote.en, cite.zh, cite.en').forEach(el => {
+      if (document.body.classList.contains('lang-en')) {
+        el.style.display = el.classList.contains('en') ? 'block' : 'none';
+      } else {
+        el.style.display = el.classList.contains('zh') ? 'block' : 'none';
+      }
+    });
+    // toggle table cells with zh/en class
+    document.querySelectorAll('th.zh, th.en, td.zh, td.en').forEach(el => {
+      if (document.body.classList.contains('lang-en')) {
+        el.style.display = el.classList.contains('en') ? 'table-cell' : 'none';
+      } else {
+        el.style.display = el.classList.contains('zh') ? 'table-cell' : 'none';
+      }
+    });
+    // toggle btn classes
+    document.querySelectorAll('.btn.zh, .btn.en').forEach(el => {
+      if (document.body.classList.contains('lang-en')) {
+        el.style.display = el.classList.contains('en') ? 'inline-block' : 'none';
+      } else {
+        el.style.display = el.classList.contains('zh') ? 'inline-block' : 'none';
+      }
+    });
+    // span inside nav
+    document.querySelectorAll('.inline-zh, .inline-en').forEach(el => {
+      if (document.body.classList.contains('lang-en')) {
+        el.style.display = el.classList.contains('inline-en') ? 'inline' : 'none';
+      } else {
+        el.style.display = el.classList.contains('inline-zh') ? 'inline' : 'none';
+      }
+    });
+    const btn = document.querySelector('.lang-btn');
+    btn.textContent = document.body.classList.contains('lang-en') ? '中文 / EN' : 'EN / 中文';
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
