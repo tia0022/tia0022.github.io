@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claw LeetCode Hot 100 | tia0022</title>
+  <meta name="description" content="LeetCode Hot 100 解析 — 包含解题思路、LeetCode 模式与 ACM 模式完整代码">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #f87171;
+      --bg: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-card2: #16213e;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --border: #2d2d4e;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(15,15,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 1.1rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .nav-badge {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; margin-left: 0.3rem;
+    }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 5rem 2rem 3rem;
+      background: radial-gradient(ellipse at top left, rgba(99,102,241,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at bottom right, rgba(6,182,212,0.08) 0%, transparent 60%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .page-hero .hero-tag {
+      display: inline-block; padding: 0.3rem 1rem;
+      background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 20px; font-size: 0.8rem; color: var(--primary); margin-bottom: 1.2rem;
+    }
+    .page-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem;
+    }
+    .page-hero h1 span {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-hero p { color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto 2rem; }
+    .hero-stats {
+      display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-size: 1.8rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-stat-label { color: var(--text-muted); font-size: 0.8rem; }
+
+    /* LAYOUT */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 0;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: calc(100vh - 180px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.2rem;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .sidebar-title {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--text-muted); text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .sidebar-search {
+      width: 100%; padding: 0.5rem 0.8rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 0.85rem;
+      margin-bottom: 1rem; outline: none;
+    }
+    .sidebar-search:focus { border-color: var(--primary); }
+    .sidebar-search::placeholder { color: var(--text-muted); }
+    .problem-link {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.5rem 0.7rem; border-radius: 8px;
+      text-decoration: none; color: var(--text-muted);
+      font-size: 0.85rem; cursor: pointer; border: none;
+      background: none; width: 100%; text-align: left;
+      transition: all 0.15s; margin-bottom: 2px;
+    }
+    .problem-link:hover { background: rgba(99,102,241,0.1); color: var(--text); }
+    .problem-link.active { background: rgba(99,102,241,0.15); color: var(--primary); font-weight: 600; }
+    .prob-num {
+      font-size: 0.7rem; font-weight: 700; min-width: 28px;
+      color: var(--text-muted); font-family: monospace;
+    }
+    .diff-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+    .diff-easy { background: var(--success); }
+    .diff-medium { background: var(--warning); }
+    .diff-hard { background: var(--danger); }
+
+    /* CONTENT */
+    .content-area {
+      padding: 2rem 2.5rem;
+      max-width: 900px;
+    }
+
+    /* PROBLEM CARD */
+    .problem-card { display: none; }
+    .problem-card.visible { display: block; }
+
+    .prob-header {
+      display: flex; align-items: flex-start; gap: 1.2rem;
+      margin-bottom: 2rem; flex-wrap: wrap;
+    }
+    .prob-id {
+      font-size: 0.8rem; color: var(--text-muted);
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem; border-radius: 6px; font-family: monospace;
+      white-space: nowrap;
+    }
+    .prob-title { font-size: 1.8rem; font-weight: 800; flex: 1; }
+    .diff-badge {
+      padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-easy { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge-medium { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge-hard { background: rgba(248,113,113,0.15); color: var(--danger); }
+    .prob-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+    .tag {
+      padding: 0.2rem 0.6rem; border-radius: 4px;
+      background: rgba(99,102,241,0.12); color: var(--primary);
+      font-size: 0.75rem; font-family: monospace;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 0; margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      padding: 0.7rem 1.5rem; background: none; border: none;
+      color: var(--text-muted); cursor: pointer; font-size: 0.9rem;
+      font-family: inherit; border-bottom: 2px solid transparent;
+      transition: all 0.2s; margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SECTIONS */
+    .section-block { margin-bottom: 2rem; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--accent); text-transform: uppercase; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* DESCRIPTION BOX */
+    .desc-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      font-size: 0.95rem; line-height: 1.8;
+    }
+    .desc-box p { margin-bottom: 0.8rem; }
+    .desc-box p:last-child { margin-bottom: 0; }
+    .desc-box code {
+      background: rgba(99,102,241,0.15); color: var(--primary);
+      padding: 0.1rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.88em;
+    }
+    .desc-box strong { color: var(--text); }
+
+    /* EXAMPLE BOX */
+    .example-box {
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem 1.2rem; margin-top: 1rem;
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      line-height: 1.8;
+    }
+    .example-box .ex-label { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.3rem; }
+
+    /* ANALYSIS BOX */
+    .analysis-box {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.05));
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: var(--radius); padding: 1.5rem;
+    }
+    .analysis-box ul { padding-left: 1.2rem; color: var(--text-muted); }
+    .analysis-box li { margin-bottom: 0.4rem; font-size: 0.92rem; }
+    .analysis-box li strong { color: var(--text); }
+    .analysis-box code {
+      background: rgba(99,102,241,0.15); color: var(--primary);
+      padding: 0.1rem 0.35rem; border-radius: 3px; font-family: monospace; font-size: 0.85em;
+    }
+    .complexity-row {
+      display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap;
+    }
+    .complexity-item {
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    .complexity-item span { color: var(--text-muted); font-size: 0.75rem; display: block; }
+    .complexity-item strong { color: var(--accent); font-family: monospace; }
+
+    /* CODE BLOCK */
+    .code-block {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border); margin-top: 0.5rem;
+    }
+    .code-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(26,26,46,0.9); padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-lang { color: var(--accent); font-size: 0.78rem; font-family: monospace; font-weight: 700; }
+    .copy-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer; font-size: 0.75rem;
+      padding: 0.25rem 0.6rem; border-radius: 4px; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); }
+    .code-block pre {
+      margin: 0 !important; border-radius: 0 !important;
+      max-height: 480px; overflow-y: auto;
+    }
+    .code-block pre code { font-size: 0.82rem !important; line-height: 1.6 !important; }
+
+    /* TEST CASE */
+    .test-case {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; margin-top: 1rem;
+    }
+    .test-case-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 1rem; background: rgba(99,102,241,0.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .test-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .test-run-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff; border: none; padding: 0.3rem 0.8rem;
+      border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-family: inherit;
+      transition: transform 0.15s;
+    }
+    .test-run-btn:hover { transform: translateY(-1px); }
+    .test-io {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    }
+    .test-io-panel { padding: 1rem; }
+    .test-io-panel:first-child { border-right: 1px solid var(--border); }
+    .test-io-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+    .test-io-content {
+      font-family: 'Courier New', monospace; font-size: 0.83rem;
+      color: var(--text); white-space: pre-wrap;
+    }
+    .test-output { color: var(--success) !important; }
+
+    /* NAVIGATION ARROWS */
+    .prob-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .prob-nav-btn {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 0.6rem 1.2rem; border-radius: 8px;
+      cursor: pointer; font-size: 0.85rem; font-family: inherit;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .prob-nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .prob-nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+    /* OVERVIEW PAGE */
+    .overview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem; margin-top: 1rem;
+    }
+    .overview-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem;
+      cursor: pointer; transition: all 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .overview-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .overview-card.easy::before { background: var(--success); }
+    .overview-card.medium::before { background: var(--warning); }
+    .overview-card.hard::before { background: var(--danger); }
+    .overview-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+    .ov-num { font-size: 0.72rem; color: var(--text-muted); font-family: monospace; margin-bottom: 0.3rem; }
+    .ov-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .ov-algo { font-size: 0.8rem; color: var(--text-muted); }
+    .ov-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .content-area { padding: 1.5rem 1rem; }
+      .test-io { grid-template-columns: 1fr; }
+      .test-io-panel:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+    @media (max-width: 600px) {
+      .nav-links { gap: 1rem; font-size: 0.8rem; }
+      .tabs { overflow-x: auto; }
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="https://tia0022.github.io/" class="nav-brand">Harness Engineering</a>
+  <div class="nav-links">
+    <a href="https://tia0022.github.io/#definition">定义</a>
+    <a href="https://tia0022.github.io/#components">核心组件</a>
+    <a href="https://tia0022.github.io/#path">学习路径</a>
+    <a href="https://tia0022.github.io/#resources">资源</a>
+    <a href="#" class="active">claw_leetcode <span class="nav-badge">HOT 100</span></a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="hero-tag">LeetCode Hot 100</div>
+  <h1>Claw <span>LeetCode</span> 解析</h1>
+  <p>19 道高频题全解析 — 题目描述、解题思路、LeetCode 模式与 ACM 模式完整代码，含可交互测试用例</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">19</div><div class="hero-stat-label">题目数量</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">困难题</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">14</div><div class="hero-stat-label">中等题</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">简单题</div></div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">题目列表</div>
+    <input class="sidebar-search" type="text" placeholder="搜索题目..." id="searchInput" oninput="filterProblems()">
+    <div id="problemList"></div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <main class="content-area" id="mainContent">
+    <!-- Overview shown by default, replaced by problem view -->
+    <div id="overviewPage">
+      <div style="margin-bottom:1.5rem;">
+        <div class="section-label">全部题目</div>
+      </div>
+      <div class="overview-grid" id="overviewGrid"></div>
+    </div>
+    <div id="problemView" style="display:none;"></div>
+  </main>
+
+</div>
+
+<script>
+// ============================================================
+// PROBLEM DATA
+// ============================================================
+const PROBLEMS = [
+  {
+    id: 1, leetcodeNum: "#1", title: "两数之和", difficulty: "easy",
+    tags: ["哈希表", "数组"],
+    description: `给定一个整数数组 <code>nums</code> 和一个整数目标值 <code>target</code>，请你在该数组中找出<strong>和为目标值</strong> <code>target</code> 的那<strong>两个</strong>整数，并返回它们的数组下标。\n\n你可以假设每种输入只会对应一个答案，同一个元素不能出现两遍。`,
+    example: { input: "nums = [2,7,11,15], target = 9", output: "[0,1]", explain: "因为 nums[0] + nums[1] == 9，返回 [0, 1]" },
+    approach: "哈希表一次遍历",
+    steps: [
+      "用哈希表存储每个元素的值和下标 <code>{value: index}</code>",
+      "遍历数组，对每个 <code>nums[i]</code>，查找 <code>target - nums[i]</code> 是否已在哈希表中",
+      "若存在，直接返回两个下标；若不存在，将当前元素存入哈希表"
+    ],
+    timeO: "O(n)", spaceO: "O(n)",
+    leetcodeCode: `class Solution:
+    def twoSum(self, nums: list[int], target: int) -> list[int]:
+        seen = {}  # value -> index
+        for i, num in enumerate(nums):
+            complement = target - num
+            if complement in seen:
+                return [seen[complement], i]
+            seen[num] = i
+        return []`,
+    acmCode: `def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    target = int(input())
+    result = two_sum(nums, target)
+    print(result[0], result[1])`,
+    testCases: [
+      { input: "2 7 11 15\n9", output: "0 1" },
+      { input: "3 2 4\n6", output: "1 2" },
+      { input: "3 3\n6", output: "0 1" }
+    ]
+  },
+  {
+    id: 2, leetcodeNum: "#49", title: "字母异位词分组", difficulty: "medium",
+    tags: ["哈希表", "字符串", "排序"],
+    description: `给你一个字符串数组，请你将<strong>字母异位词</strong>组合在一起。字母异位词是由重新排列源单词的所有字母得到的一个新单词。`,
+    example: { input: 'strs = ["eat","tea","tan","ate","nat","bat"]', output: '[["bat"],["nat","tan"],["ate","eat","tea"]]' },
+    approach: "排序作为哈希键",
+    steps: [
+      "将每个字符串排序后的结果作为哈希表的 key",
+      "同一组字母异位词排序后结果相同",
+      "用哈希表将排序结果相同的字符串归为一组"
+    ],
+    timeO: "O(n·k·log k)", spaceO: "O(n·k)",
+    leetcodeCode: `from collections import defaultdict
+
+class Solution:
+    def groupAnagrams(self, strs: list[str]) -> list[list[str]]:
+        groups = defaultdict(list)
+        for s in strs:
+            key = tuple(sorted(s))  # 排序后作为 key
+            groups[key].append(s)
+        return list(groups.values())`,
+    acmCode: `from collections import defaultdict
+
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for s in strs:
+        key = tuple(sorted(s))
+        groups[key].append(s)
+    return list(groups.values())
+
+if __name__ == "__main__":
+    strs = input().split()
+    result = group_anagrams(strs)
+    for group in result:
+        print(" ".join(group))`,
+    testCases: [
+      { input: "eat tea tan ate nat bat", output: "eat tea ate\ntan nat\nbat" },
+      { input: "a", output: "a" }
+    ]
+  },
+  {
+    id: 3, leetcodeNum: "#128", title: "最长连续序列", difficulty: "medium",
+    tags: ["哈希表", "并查集"],
+    description: `给定一个未排序的整数数组 <code>nums</code>，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。\n\n请你设计并实现时间复杂度为 <strong>O(n)</strong> 的算法解决此问题。`,
+    example: { input: "nums = [100,4,200,1,3,2]", output: "4", explain: "最长数字连续序列是 [1, 2, 3, 4]，长度为 4" },
+    approach: "哈希集合 + 序列起点剪枝",
+    steps: [
+      "将所有数字存入集合",
+      "遍历每个数，只对<strong>序列起点</strong>（即 <code>num-1</code> 不在集合中的数）进行扩展",
+      "从起点开始不断向右延伸，统计当前序列长度",
+      "更新最大长度"
+    ],
+    timeO: "O(n)", spaceO: "O(n)",
+    leetcodeCode: `class Solution:
+    def longestConsecutive(self, nums: list[int]) -> int:
+        num_set = set(nums)
+        max_len = 0
+
+        for num in num_set:
+            # 只从序列起点开始计数
+            if num - 1 not in num_set:
+                current = num
+                length = 1
+                while current + 1 in num_set:
+                    current += 1
+                    length += 1
+                max_len = max(max_len, length)
+
+        return max_len`,
+    acmCode: `def longest_consecutive(nums):
+    num_set = set(nums)
+    max_len = 0
+
+    for num in num_set:
+        if num - 1 not in num_set:
+            current = num
+            length = 1
+            while current + 1 in num_set:
+                current += 1
+                length += 1
+            max_len = max(max_len, length)
+
+    return max_len
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    print(longest_consecutive(nums))`,
+    testCases: [
+      { input: "100 4 200 1 3 2", output: "4" },
+      { input: "0 3 7 2 5 8 4 6 0 1", output: "9" }
+    ]
+  },
+  {
+    id: 4, leetcodeNum: "#283", title: "移动零", difficulty: "easy",
+    tags: ["数组", "双指针"],
+    description: `给定一个数组 <code>nums</code>，编写一个函数将所有 <code>0</code> 移动到数组的末尾，同时保持非零元素的相对顺序。\n\n<strong>注意：</strong>必须在不复制数组的情况下原地对数组进行操作。`,
+    example: { input: "nums = [0,1,0,3,12]", output: "[1,3,12,0,0]" },
+    approach: "双指针原地交换",
+    steps: [
+      "慢指针 <code>slow</code> 指向下一个非零元素应该放置的位置",
+      "快指针 <code>fast</code> 遍历数组",
+      "遇到非零元素，将其与 <code>slow</code> 位置交换，<code>slow</code> 后移",
+      "遍历结束后，<code>slow</code> 之后的位置全部为零"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def moveZeroes(self, nums: list[int]) -> None:
+        slow = 0  # 指向下一个非零元素放置位置
+        for fast in range(len(nums)):
+            if nums[fast] != 0:
+                nums[slow], nums[fast] = nums[fast], nums[slow]
+                slow += 1`,
+    acmCode: `def move_zeroes(nums):
+    slow = 0
+    for fast in range(len(nums)):
+        if nums[fast] != 0:
+            nums[slow], nums[fast] = nums[fast], nums[slow]
+            slow += 1
+    return nums
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    result = move_zeroes(nums)
+    print(*result)`,
+    testCases: [
+      { input: "0 1 0 3 12", output: "1 3 12 0 0" },
+      { input: "0", output: "0" },
+      { input: "0 0 1", output: "1 0 0" }
+    ]
+  },
+  {
+    id: 5, leetcodeNum: "#11", title: "盛最多水的容器", difficulty: "medium",
+    tags: ["数组", "双指针", "贪心"],
+    description: `给定一个长度为 n 的整数数组 <code>height</code>，有 n 条垂线，第 i 条线的两个端点是 <code>(i, 0)</code> 和 <code>(i, height[i])</code>。\n\n找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。`,
+    example: { input: "height = [1,8,6,2,5,4,8,3,7]", output: "49" },
+    approach: "双指针贪心",
+    steps: [
+      "左右双指针从两端向中间收缩",
+      "每次计算当前容积 = <code>min(height[l], height[r]) * (r - l)</code>",
+      "移动<strong>较矮</strong>一侧的指针（移动较高侧只会减少宽度，不可能增加容积）",
+      "更新最大容积"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def maxArea(self, height: list[int]) -> int:
+        l, r = 0, len(height) - 1
+        max_water = 0
+
+        while l < r:
+            water = min(height[l], height[r]) * (r - l)
+            max_water = max(max_water, water)
+            # 移动较矮的一侧
+            if height[l] <= height[r]:
+                l += 1
+            else:
+                r -= 1
+
+        return max_water`,
+    acmCode: `def max_area(height):
+    l, r = 0, len(height) - 1
+    max_water = 0
+    while l < r:
+        water = min(height[l], height[r]) * (r - l)
+        max_water = max(max_water, water)
+        if height[l] <= height[r]:
+            l += 1
+        else:
+            r -= 1
+    return max_water
+
+if __name__ == "__main__":
+    height = list(map(int, input().split()))
+    print(max_area(height))`,
+    testCases: [
+      { input: "1 8 6 2 5 4 8 3 7", output: "49" },
+      { input: "1 1", output: "1" }
+    ]
+  },
+  {
+    id: 6, leetcodeNum: "#15", title: "三数之和", difficulty: "medium",
+    tags: ["数组", "双指针", "排序"],
+    description: `给你一个整数数组 <code>nums</code>，判断是否存在三元组 <code>[nums[i], nums[j], nums[k]]</code> 满足 <code>i != j</code>、<code>i != k</code> 且 <code>j != k</code>，同时满足 <code>nums[i] + nums[j] + nums[k] == 0</code>。\n\n请你返回所有和为 0 且<strong>不重复</strong>的三元组。`,
+    example: { input: "nums = [-1,0,1,2,-1,-4]", output: "[[-1,-1,2],[-1,0,1]]" },
+    approach: "排序 + 双指针去重",
+    steps: [
+      "先对数组排序",
+      "枚举第一个数 <code>nums[i]</code>，若 <code>nums[i] &gt; 0</code> 直接 break",
+      "若 <code>nums[i] == nums[i-1]</code>，跳过去重",
+      "对剩余部分用双指针找两数之和 = <code>-nums[i]</code>",
+      "找到后，左右指针分别跳过重复元素"
+    ],
+    timeO: "O(n²)", spaceO: "O(log n)",
+    leetcodeCode: `class Solution:
+    def threeSum(self, nums: list[int]) -> list[list[int]]:
+        nums.sort()
+        result = []
+        n = len(nums)
+
+        for i in range(n - 2):
+            if nums[i] > 0:
+                break
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue  # 去重
+
+            l, r = i + 1, n - 1
+            while l < r:
+                total = nums[i] + nums[l] + nums[r]
+                if total == 0:
+                    result.append([nums[i], nums[l], nums[r]])
+                    while l < r and nums[l] == nums[l + 1]:
+                        l += 1
+                    while l < r and nums[r] == nums[r - 1]:
+                        r -= 1
+                    l += 1; r -= 1
+                elif total < 0:
+                    l += 1
+                else:
+                    r -= 1
+
+        return result`,
+    acmCode: `def three_sum(nums):
+    nums.sort()
+    result = []
+    n = len(nums)
+    for i in range(n - 2):
+        if nums[i] > 0:
+            break
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        l, r = i + 1, n - 1
+        while l < r:
+            total = nums[i] + nums[l] + nums[r]
+            if total == 0:
+                result.append([nums[i], nums[l], nums[r]])
+                while l < r and nums[l] == nums[l + 1]: l += 1
+                while l < r and nums[r] == nums[r - 1]: r -= 1
+                l += 1; r -= 1
+            elif total < 0: l += 1
+            else: r -= 1
+    return result
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    result = three_sum(nums)
+    for triple in result:
+        print(*triple)`,
+    testCases: [
+      { input: "-1 0 1 2 -1 -4", output: "-1 -1 2\n-1 0 1" },
+      { input: "0 0 0", output: "0 0 0" }
+    ]
+  },
+  {
+    id: 7, leetcodeNum: "#42", title: "接雨水", difficulty: "hard",
+    tags: ["数组", "双指针", "动态规划", "单调栈"],
+    description: `给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。`,
+    example: { input: "height = [0,1,0,2,1,0,1,3,2,1,2,1]", output: "6" },
+    approach: "双指针维护前后缀最大值",
+    steps: [
+      "维护左右两个指针和对应的前缀最大值 <code>left_max</code>、<code>right_max</code>",
+      "哪边的最大值较小，就移动哪边的指针",
+      "较小一侧位置能存的水 = <code>该侧最大值 - height[i]</code>"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def trap(self, height: list[int]) -> int:
+        l, r = 0, len(height) - 1
+        left_max = right_max = 0
+        water = 0
+
+        while l < r:
+            if height[l] <= height[r]:
+                if height[l] >= left_max:
+                    left_max = height[l]
+                else:
+                    water += left_max - height[l]
+                l += 1
+            else:
+                if height[r] >= right_max:
+                    right_max = height[r]
+                else:
+                    water += right_max - height[r]
+                r -= 1
+
+        return water`,
+    acmCode: `def trap(height):
+    l, r = 0, len(height) - 1
+    left_max = right_max = 0
+    water = 0
+    while l < r:
+        if height[l] <= height[r]:
+            if height[l] >= left_max:
+                left_max = height[l]
+            else:
+                water += left_max - height[l]
+            l += 1
+        else:
+            if height[r] >= right_max:
+                right_max = height[r]
+            else:
+                water += right_max - height[r]
+            r -= 1
+    return water
+
+if __name__ == "__main__":
+    height = list(map(int, input().split()))
+    print(trap(height))`,
+    testCases: [
+      { input: "0 1 0 2 1 0 1 3 2 1 2 1", output: "6" },
+      { input: "4 2 0 3 2 5", output: "9" }
+    ]
+  },
+  {
+    id: 8, leetcodeNum: "#3", title: "无重复字符的最长子串", difficulty: "medium",
+    tags: ["哈希表", "字符串", "滑动窗口"],
+    description: `给定一个字符串 <code>s</code>，请你找出其中不含有重复字符的<strong>最长子串</strong>的长度。`,
+    example: { input: 's = "abcabcbb"', output: "3", explain: '最长子串为 "abc"，长度为 3' },
+    approach: "滑动窗口 + 哈希表",
+    steps: [
+      "维护一个滑动窗口 <code>[left, right]</code>",
+      "用哈希表 <code>char_index</code> 记录每个字符上次出现的位置",
+      "遇到重复字符时，将 <code>left</code> 跳到重复字符上次出现位置的下一位",
+      "更新当前最大窗口长度"
+    ],
+    timeO: "O(n)", spaceO: "O(min(m,n))",
+    leetcodeCode: `class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        char_index = {}  # 字符 -> 上次出现位置
+        max_len = 0
+        left = 0
+
+        for right, ch in enumerate(s):
+            if ch in char_index and char_index[ch] >= left:
+                left = char_index[ch] + 1
+            char_index[ch] = right
+            max_len = max(max_len, right - left + 1)
+
+        return max_len`,
+    acmCode: `def length_of_longest_substring(s):
+    char_index = {}
+    max_len = 0
+    left = 0
+    for right, ch in enumerate(s):
+        if ch in char_index and char_index[ch] >= left:
+            left = char_index[ch] + 1
+        char_index[ch] = right
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+if __name__ == "__main__":
+    s = input().strip()
+    print(length_of_longest_substring(s))`,
+    testCases: [
+      { input: "abcabcbb", output: "3" },
+      { input: "bbbbb", output: "1" },
+      { input: "pwwkew", output: "3" }
+    ]
+  },
+  {
+    id: 9, leetcodeNum: "#438", title: "找到字符串中所有字母异位词", difficulty: "medium",
+    tags: ["哈希表", "字符串", "滑动窗口"],
+    description: `给定两个字符串 <code>s</code> 和 <code>p</code>，找到 <code>s</code> 中所有 <code>p</code> 的<strong>字母异位词</strong>的子串，返回这些子串的起始索引。`,
+    example: { input: 's = "cbaebabacd", p = "abc"', output: "[0,6]" },
+    approach: "固定窗口字符频次比较",
+    steps: [
+      "维护一个长度为 <code>len(p)</code> 的滑动窗口",
+      "用两个长度为 26 的数组分别记录 p 的字符频次和当前窗口字符频次",
+      "窗口向右滑动时，加入右侧字符、移除左侧字符",
+      "若两个频次数组相等，当前窗口起始位置即为答案"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def findAnagrams(self, s: str, p: str) -> list[int]:
+        if len(s) < len(p):
+            return []
+        p_count = [0] * 26
+        window = [0] * 26
+        for ch in p:
+            p_count[ord(ch) - ord('a')] += 1
+        result = []
+        k = len(p)
+        for i in range(len(s)):
+            window[ord(s[i]) - ord('a')] += 1
+            if i >= k:
+                window[ord(s[i - k]) - ord('a')] -= 1
+            if window == p_count:
+                result.append(i - k + 1)
+        return result`,
+    acmCode: `def find_anagrams(s, p):
+    if len(s) < len(p):
+        return []
+    p_count = [0] * 26
+    window = [0] * 26
+    for ch in p:
+        p_count[ord(ch) - ord('a')] += 1
+    result = []
+    k = len(p)
+    for i in range(len(s)):
+        window[ord(s[i]) - ord('a')] += 1
+        if i >= k:
+            window[ord(s[i - k]) - ord('a')] -= 1
+        if window == p_count:
+            result.append(i - k + 1)
+    return result
+
+if __name__ == "__main__":
+    s = input().strip()
+    p = input().strip()
+    print(*find_anagrams(s, p))`,
+    testCases: [
+      { input: "cbaebabacd\nabc", output: "0 6" },
+      { input: "abab\nab", output: "0 1 2" }
+    ]
+  },
+  {
+    id: 10, leetcodeNum: "#560", title: "和为 K 的子数组", difficulty: "medium",
+    tags: ["数组", "哈希表", "前缀和"],
+    description: `给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code>，请你统计并返回<strong>该数组中和为 k 的子数组的个数</strong>。`,
+    example: { input: "nums = [1,1,1], k = 2", output: "2" },
+    approach: "前缀和 + 哈希表",
+    steps: [
+      "设前缀和 <code>prefix[i] = nums[0] + ... + nums[i-1]</code>",
+      "子数组 <code>[j, i]</code> 的和 = <code>prefix[i] - prefix[j]</code>",
+      "若和为 k，则 <code>prefix[j] = prefix[i] - k</code>",
+      "用哈希表记录前缀和出现次数，遍历时查找 <code>prefix[i] - k</code> 的次数累加"
+    ],
+    timeO: "O(n)", spaceO: "O(n)",
+    leetcodeCode: `from collections import defaultdict
+
+class Solution:
+    def subarraySum(self, nums: list[int], k: int) -> int:
+        prefix_count = defaultdict(int)
+        prefix_count[0] = 1  # 空前缀
+        prefix_sum = 0
+        count = 0
+
+        for num in nums:
+            prefix_sum += num
+            count += prefix_count[prefix_sum - k]
+            prefix_count[prefix_sum] += 1
+
+        return count`,
+    acmCode: `from collections import defaultdict
+
+def subarray_sum(nums, k):
+    prefix_count = defaultdict(int)
+    prefix_count[0] = 1
+    prefix_sum = 0
+    count = 0
+    for num in nums:
+        prefix_sum += num
+        count += prefix_count[prefix_sum - k]
+        prefix_count[prefix_sum] += 1
+    return count
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    k = int(input())
+    print(subarray_sum(nums, k))`,
+    testCases: [
+      { input: "1 1 1\n2", output: "2" },
+      { input: "1 2 3\n3", output: "2" }
+    ]
+  },
+  {
+    id: 11, leetcodeNum: "#239", title: "滑动窗口最大值", difficulty: "hard",
+    tags: ["数组", "队列", "滑动窗口", "单调队列"],
+    description: `给你一个整数数组 <code>nums</code>，有一个大小为 <code>k</code> 的滑动窗口从数组的最左侧移动到数组的最右侧，请你返回<strong>滑动窗口中的最大值</strong>。`,
+    example: { input: "nums = [1,3,-1,-3,5,3,6,7], k = 3", output: "[3,3,5,5,6,7]" },
+    approach: "单调递减双端队列",
+    steps: [
+      "用双端队列 <code>deque</code> 存储元素下标",
+      "保持队列中下标对应的元素从队头到队尾<strong>单调递减</strong>",
+      "入队时，从队尾移除所有小于当前元素的下标",
+      "检查队头是否已滑出窗口，若超出则移除",
+      "窗口满后，队头即为当前窗口最大值"
+    ],
+    timeO: "O(n)", spaceO: "O(k)",
+    leetcodeCode: `from collections import deque
+
+class Solution:
+    def maxSlidingWindow(self, nums: list[int], k: int) -> list[int]:
+        dq = deque()  # 存下标，单调递减（对应值）
+        result = []
+
+        for i in range(len(nums)):
+            # 移除超出窗口的队头
+            while dq and dq[0] < i - k + 1:
+                dq.popleft()
+            # 维护单调递减
+            while dq and nums[dq[-1]] < nums[i]:
+                dq.pop()
+            dq.append(i)
+            if i >= k - 1:
+                result.append(nums[dq[0]])
+
+        return result`,
+    acmCode: `from collections import deque
+
+def max_sliding_window(nums, k):
+    dq = deque()
+    result = []
+    for i in range(len(nums)):
+        while dq and dq[0] < i - k + 1:
+            dq.popleft()
+        while dq and nums[dq[-1]] < nums[i]:
+            dq.pop()
+        dq.append(i)
+        if i >= k - 1:
+            result.append(nums[dq[0]])
+    return result
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    k = int(input())
+    print(*max_sliding_window(nums, k))`,
+    testCases: [
+      { input: "1 3 -1 -3 5 3 6 7\n3", output: "3 3 5 5 6 7" },
+      { input: "1\n1", output: "1" }
+    ]
+  },
+  {
+    id: 12, leetcodeNum: "#76", title: "最小覆盖子串", difficulty: "hard",
+    tags: ["哈希表", "字符串", "滑动窗口"],
+    description: `给你一个字符串 <code>s</code>、一个字符串 <code>t</code>。返回 <code>s</code> 中涵盖 <code>t</code> 所有字符的最小子串。如果 <code>s</code> 中不存在涵盖 <code>t</code> 所有字符的子串，则返回空字符串 <code>""</code>。`,
+    example: { input: 's = "ADOBECODEBANC", t = "ABC"', output: '"BANC"' },
+    approach: "可变滑动窗口",
+    steps: [
+      "用哈希表 <code>need</code> 记录 t 中每个字符的需求数量",
+      "<code>missing</code> 记录还需匹配的字符总数",
+      "右指针扩张窗口：加入字符，若该字符仍需要则 <code>missing -= 1</code>",
+      "当 <code>missing == 0</code> 时，左指针收缩窗口，记录最小窗口"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `from collections import Counter
+
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        need = Counter(t)
+        missing = len(t)
+        left = 0
+        start = end = 0
+
+        for right, ch in enumerate(s, 1):
+            if need[ch] > 0:
+                missing -= 1
+            need[ch] -= 1
+
+            if missing == 0:
+                while need[s[left]] < 0:
+                    need[s[left]] += 1
+                    left += 1
+                if end == 0 or right - left < end - start:
+                    start, end = left, right
+                need[s[left]] += 1
+                missing += 1
+                left += 1
+
+        return s[start:end]`,
+    acmCode: `from collections import Counter
+
+def min_window(s, t):
+    need = Counter(t)
+    missing = len(t)
+    left = 0
+    start = end = 0
+    for right, ch in enumerate(s, 1):
+        if need[ch] > 0:
+            missing -= 1
+        need[ch] -= 1
+        if missing == 0:
+            while need[s[left]] < 0:
+                need[s[left]] += 1
+                left += 1
+            if end == 0 or right - left < end - start:
+                start, end = left, right
+            need[s[left]] += 1
+            missing += 1
+            left += 1
+    return s[start:end]
+
+if __name__ == "__main__":
+    s = input().strip()
+    t = input().strip()
+    print(min_window(s, t))`,
+    testCases: [
+      { input: "ADOBECODEBANC\nABC", output: "BANC" },
+      { input: "a\na", output: "a" }
+    ]
+  },
+  {
+    id: 13, leetcodeNum: "#53", title: "最大子数组和", difficulty: "medium",
+    tags: ["数组", "动态规划", "分治"],
+    description: `给你一个整数数组 <code>nums</code>，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。`,
+    example: { input: "nums = [-2,1,-3,4,-1,2,1,-5,4]", output: "6", explain: "连续子数组 [4,-1,2,1] 的和最大，为 6" },
+    approach: "Kadane 动态规划",
+    steps: [
+      "<code>dp[i]</code> 表示以 <code>nums[i]</code> 结尾的最大子数组和",
+      "状态转移：<code>dp[i] = max(dp[i-1] + nums[i], nums[i])</code>",
+      "若前面的累积和为负，直接从当前元素重新开始",
+      "空间优化为 O(1)，只保留前一个状态"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def maxSubArray(self, nums: list[int]) -> int:
+        cur_sum = max_sum = nums[0]
+
+        for num in nums[1:]:
+            cur_sum = max(num, cur_sum + num)
+            max_sum = max(max_sum, cur_sum)
+
+        return max_sum`,
+    acmCode: `def max_sub_array(nums):
+    cur_sum = max_sum = nums[0]
+    for num in nums[1:]:
+        cur_sum = max(num, cur_sum + num)
+        max_sum = max(max_sum, cur_sum)
+    return max_sum
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    print(max_sub_array(nums))`,
+    testCases: [
+      { input: "-2 1 -3 4 -1 2 1 -5 4", output: "6" },
+      { input: "1", output: "1" },
+      { input: "5 4 -1 7 8", output: "23" }
+    ]
+  },
+  {
+    id: 14, leetcodeNum: "#56", title: "合并区间", difficulty: "medium",
+    tags: ["数组", "排序"],
+    description: `以数组 <code>intervals</code> 表示若干个区间的集合，其中单个区间为 <code>intervals[i] = [start, end]</code>。请你合并所有重叠的区间，并返回一个<strong>不重叠的区间数组</strong>。`,
+    example: { input: "intervals = [[1,3],[2,6],[8,10],[15,18]]", output: "[[1,6],[8,10],[15,18]]" },
+    approach: "排序 + 贪心合并",
+    steps: [
+      "按区间起点排序",
+      "遍历区间，若当前区间起点 ≤ 上一个区间终点，则合并（更新终点为两者最大值）",
+      "否则，将当前区间加入结果"
+    ],
+    timeO: "O(n log n)", spaceO: "O(n)",
+    leetcodeCode: `class Solution:
+    def merge(self, intervals: list[list[int]]) -> list[list[int]]:
+        intervals.sort(key=lambda x: x[0])
+        merged = [intervals[0]]
+
+        for start, end in intervals[1:]:
+            if start <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], end)
+            else:
+                merged.append([start, end])
+
+        return merged`,
+    acmCode: `def merge_intervals(intervals):
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    for start, end in intervals[1:]:
+        if start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged
+
+if __name__ == "__main__":
+    n = int(input())
+    intervals = []
+    for _ in range(n):
+        a, b = map(int, input().split())
+        intervals.append([a, b])
+    result = merge_intervals(intervals)
+    for interval in result:
+        print(*interval)`,
+    testCases: [
+      { input: "4\n1 3\n2 6\n8 10\n15 18", output: "1 6\n8 10\n15 18" },
+      { input: "2\n1 4\n4 5", output: "1 5" }
+    ]
+  },
+  {
+    id: 15, leetcodeNum: "#189", title: "轮转数组", difficulty: "medium",
+    tags: ["数组", "数学", "双指针"],
+    description: `给定一个整数数组 <code>nums</code>，将数组中的元素向右轮转 <code>k</code> 个位置，其中 <code>k</code> 是非负数。`,
+    example: { input: "nums = [1,2,3,4,5,6,7], k = 3", output: "[5,6,7,1,2,3,4]" },
+    approach: "三次翻转原地算法",
+    steps: [
+      "将整个数组翻转",
+      "翻转前 k 个元素",
+      "翻转后 n-k 个元素",
+      "原理：右移 k 位 = 先整体逆序，再分段逆序还原"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def rotate(self, nums: list[int], k: int) -> None:
+        n = len(nums)
+        k %= n
+
+        def reverse(l, r):
+            while l < r:
+                nums[l], nums[r] = nums[r], nums[l]
+                l += 1; r -= 1
+
+        reverse(0, n - 1)   # 整体翻转
+        reverse(0, k - 1)   # 翻转前 k 个
+        reverse(k, n - 1)   # 翻转后 n-k 个`,
+    acmCode: `def rotate(nums, k):
+    n = len(nums)
+    k %= n
+    def reverse(l, r):
+        while l < r:
+            nums[l], nums[r] = nums[r], nums[l]
+            l += 1; r -= 1
+    reverse(0, n - 1)
+    reverse(0, k - 1)
+    reverse(k, n - 1)
+    return nums
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    k = int(input())
+    print(*rotate(nums, k))`,
+    testCases: [
+      { input: "1 2 3 4 5 6 7\n3", output: "5 6 7 1 2 3 4" },
+      { input: "-1 -100 3 99\n2", output: "3 99 -1 -100" }
+    ]
+  },
+  {
+    id: 16, leetcodeNum: "#238", title: "除自身以外数组的乘积", difficulty: "medium",
+    tags: ["数组", "前缀积"],
+    description: `给你一个整数数组 <code>nums</code>，返回数组 <code>answer</code>，其中 <code>answer[i]</code> 等于 <code>nums</code> 中除 <code>nums[i]</code> 之外其余各元素的乘积。\n\n<strong>不能使用除法</strong>，且在 O(n) 时间复杂度内完成。`,
+    example: { input: "nums = [1,2,3,4]", output: "[24,12,8,6]" },
+    approach: "前缀积 × 后缀积",
+    steps: [
+      "第一遍（正向）：计算每个位置的<strong>前缀积</strong>（不含自身）",
+      "第二遍（反向）：乘以每个位置的<strong>后缀积</strong>（不含自身）",
+      "空间优化：直接用结果数组存前缀积，后缀积用一个变量滚动"
+    ],
+    timeO: "O(n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def productExceptSelf(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        result = [1] * n
+
+        prefix = 1
+        for i in range(n):
+            result[i] = prefix
+            prefix *= nums[i]
+
+        suffix = 1
+        for i in range(n - 1, -1, -1):
+            result[i] *= suffix
+            suffix *= nums[i]
+
+        return result`,
+    acmCode: `def product_except_self(nums):
+    n = len(nums)
+    result = [1] * n
+    prefix = 1
+    for i in range(n):
+        result[i] = prefix
+        prefix *= nums[i]
+    suffix = 1
+    for i in range(n - 1, -1, -1):
+        result[i] *= suffix
+        suffix *= nums[i]
+    return result
+
+if __name__ == "__main__":
+    nums = list(map(int, input().split()))
+    print(*product_except_self(nums))`,
+    testCases: [
+      { input: "1 2 3 4", output: "24 12 8 6" },
+      { input: "-1 1 0 -3 3", output: "0 0 9 0 0" }
+    ]
+  },
+  {
+    id: 17, leetcodeNum: "#73", title: "矩阵置零", difficulty: "medium",
+    tags: ["数组", "哈希表", "矩阵"],
+    description: `给定一个 <code>m x n</code> 的矩阵，如果一个元素为 <strong>0</strong>，则将其所在行和列的所有元素都设为 <strong>0</strong>。请使用<strong>原地</strong>算法。`,
+    example: { input: "matrix = [[1,1,1],[1,0,1],[1,1,1]]", output: "[[1,0,1],[0,0,0],[1,0,1]]" },
+    approach: "利用第一行列原地标记",
+    steps: [
+      "先检查第一行、第一列是否含 0，记录标志",
+      "用第一行、第一列标记哪些行/列需要置零",
+      "从 <code>(1,1)</code> 开始遍历，若 <code>matrix[i][j] == 0</code>，标记对应行列",
+      "根据标记置零（除第一行列外）",
+      "最后根据初始标志处理第一行和第一列"
+    ],
+    timeO: "O(m·n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def setZeroes(self, matrix: list[list[int]]) -> None:
+        m, n = len(matrix), len(matrix[0])
+        first_row_zero = any(matrix[0][j] == 0 for j in range(n))
+        first_col_zero = any(matrix[i][0] == 0 for i in range(m))
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+
+        if first_row_zero:
+            for j in range(n): matrix[0][j] = 0
+        if first_col_zero:
+            for i in range(m): matrix[i][0] = 0`,
+    acmCode: `def set_zeroes(matrix):
+    m, n = len(matrix), len(matrix[0])
+    first_row_zero = any(matrix[0][j] == 0 for j in range(n))
+    first_col_zero = any(matrix[i][0] == 0 for i in range(m))
+    for i in range(1, m):
+        for j in range(1, n):
+            if matrix[i][j] == 0:
+                matrix[i][0] = 0; matrix[0][j] = 0
+    for i in range(1, m):
+        for j in range(1, n):
+            if matrix[i][0] == 0 or matrix[0][j] == 0:
+                matrix[i][j] = 0
+    if first_row_zero:
+        for j in range(n): matrix[0][j] = 0
+    if first_col_zero:
+        for i in range(m): matrix[i][0] = 0
+    return matrix
+
+if __name__ == "__main__":
+    m, n = map(int, input().split())
+    matrix = []
+    for _ in range(m):
+        row = list(map(int, input().split()))
+        matrix.append(row)
+    result = set_zeroes(matrix)
+    for row in result:
+        print(*row)`,
+    testCases: [
+      { input: "3 3\n1 1 1\n1 0 1\n1 1 1", output: "1 0 1\n0 0 0\n1 0 1" },
+      { input: "3 4\n0 1 2 0\n3 4 5 2\n1 3 1 5", output: "0 0 0 0\n0 4 5 0\n0 3 1 0" }
+    ]
+  },
+  {
+    id: 18, leetcodeNum: "#54", title: "螺旋矩阵", difficulty: "medium",
+    tags: ["数组", "矩阵", "模拟"],
+    description: `给你一个 <code>m</code> 行 <code>n</code> 列的矩阵 <code>matrix</code>，请按照<strong>顺时针螺旋顺序</strong>，返回矩阵中的所有元素。`,
+    example: { input: "matrix = [[1,2,3],[4,5,6],[7,8,9]]", output: "[1,2,3,6,9,8,7,4,5]" },
+    approach: "边界收缩模拟",
+    steps: [
+      "维护四个边界：<code>top, bottom, left, right</code>",
+      "依次遍历：从左到右 → 从上到下 → 从右到左 → 从下到上",
+      "每完成一个方向后，收缩对应边界",
+      "循环直到边界越界"
+    ],
+    timeO: "O(m·n)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+        result = []
+        top, bottom = 0, len(matrix) - 1
+        left, right = 0, len(matrix[0]) - 1
+
+        while top <= bottom and left <= right:
+            for j in range(left, right + 1):
+                result.append(matrix[top][j])
+            top += 1
+            for i in range(top, bottom + 1):
+                result.append(matrix[i][right])
+            right -= 1
+            if top <= bottom:
+                for j in range(right, left - 1, -1):
+                    result.append(matrix[bottom][j])
+                bottom -= 1
+            if left <= right:
+                for i in range(bottom, top - 1, -1):
+                    result.append(matrix[i][left])
+                left += 1
+
+        return result`,
+    acmCode: `def spiral_order(matrix):
+    result = []
+    top, bottom = 0, len(matrix) - 1
+    left, right = 0, len(matrix[0]) - 1
+    while top <= bottom and left <= right:
+        for j in range(left, right + 1):
+            result.append(matrix[top][j])
+        top += 1
+        for i in range(top, bottom + 1):
+            result.append(matrix[i][right])
+        right -= 1
+        if top <= bottom:
+            for j in range(right, left - 1, -1):
+                result.append(matrix[bottom][j])
+            bottom -= 1
+        if left <= right:
+            for i in range(bottom, top - 1, -1):
+                result.append(matrix[i][left])
+            left += 1
+    return result
+
+if __name__ == "__main__":
+    m, n = map(int, input().split())
+    matrix = []
+    for _ in range(m):
+        row = list(map(int, input().split()))
+        matrix.append(row)
+    print(*spiral_order(matrix))`,
+    testCases: [
+      { input: "3 3\n1 2 3\n4 5 6\n7 8 9", output: "1 2 3 6 9 8 7 4 5" },
+      { input: "3 4\n1 2 3 4\n5 6 7 8\n9 10 11 12", output: "1 2 3 4 8 12 11 10 9 5 6 7" }
+    ]
+  },
+  {
+    id: 19, leetcodeNum: "#48", title: "旋转图像", difficulty: "medium",
+    tags: ["数组", "数学", "矩阵"],
+    description: `给定一个 <code>n × n</code> 的二维矩阵 <code>matrix</code> 表示一个图像。请你将图像<strong>顺时针旋转 90 度</strong>。\n\n<strong>必须在原地旋转</strong>，不能使用另一个矩阵。`,
+    example: { input: "matrix = [[1,2,3],[4,5,6],[7,8,9]]", output: "[[7,4,1],[8,5,2],[9,6,3]]" },
+    approach: "转置 + 水平翻转",
+    steps: [
+      "顺时针旋转 90° = <strong>先转置</strong>（沿主对角线翻转）<strong>再水平翻转</strong>（每行逆序）",
+      "转置：<code>matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]</code>",
+      "水平翻转：对每行执行 <code>row.reverse()</code>"
+    ],
+    timeO: "O(n²)", spaceO: "O(1)",
+    leetcodeCode: `class Solution:
+    def rotate(self, matrix: list[list[int]]) -> None:
+        n = len(matrix)
+
+        # Step 1: 转置矩阵
+        for i in range(n):
+            for j in range(i + 1, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        # Step 2: 水平翻转每行
+        for row in matrix:
+            row.reverse()`,
+    acmCode: `def rotate_image(matrix):
+    n = len(matrix)
+    for i in range(n):
+        for j in range(i + 1, n):
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+    for row in matrix:
+        row.reverse()
+    return matrix
+
+if __name__ == "__main__":
+    n = int(input())
+    matrix = []
+    for _ in range(n):
+        row = list(map(int, input().split()))
+        matrix.append(row)
+    result = rotate_image(matrix)
+    for row in result:
+        print(*row)`,
+    testCases: [
+      { input: "3\n1 2 3\n4 5 6\n7 8 9", output: "7 4 1\n8 5 2\n9 6 3" },
+      { input: "2\n5 1\n1 4", output: "1 5\n4 1" }
+    ]
+  }
+];
+
+// ============================================================
+// RENDER SIDEBAR
+// ============================================================
+function renderSidebar(filter = '') {
+  const list = document.getElementById('problemList');
+  list.innerHTML = '';
+  const filtered = PROBLEMS.filter(p =>
+    p.title.includes(filter) || p.leetcodeNum.includes(filter) || String(p.id).includes(filter)
+  );
+  filtered.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'problem-link';
+    btn.id = `sidebar-${p.id}`;
+    btn.onclick = () => showProblem(p.id);
+    const diffClass = { easy: 'diff-easy', medium: 'diff-medium', hard: 'diff-hard' }[p.difficulty];
+    btn.innerHTML = `
+      <span class="prob-num">${p.leetcodeNum}</span>
+      <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${p.title}</span>
+      <span class="diff-dot ${diffClass}"></span>
+    `;
+    list.appendChild(btn);
+  });
+}
+
+function filterProblems() {
+  const q = document.getElementById('searchInput').value.trim();
+  renderSidebar(q);
+}
+
+// ============================================================
+// RENDER OVERVIEW
+// ============================================================
+function renderOverview() {
+  const grid = document.getElementById('overviewGrid');
+  const diffLabel = { easy: '简单', medium: '中等', hard: '困难' };
+  const diffBadge = { easy: 'badge-easy', medium: 'badge-medium', hard: 'badge-hard' };
+  grid.innerHTML = PROBLEMS.map(p => `
+    <div class="overview-card ${p.difficulty}" onclick="showProblem(${p.id})">
+      <div class="ov-num">${p.leetcodeNum}</div>
+      <div class="ov-title">${p.title}</div>
+      <div class="ov-algo">${p.approach}</div>
+      <div class="ov-footer">
+        <span class="diff-badge ${diffBadge[p.difficulty]}">${diffLabel[p.difficulty]}</span>
+        <span style="font-size:0.75rem;color:var(--text-muted);">${p.tags[0]}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// SHOW PROBLEM
+// ============================================================
+let currentProblemId = null;
+
+function showProblem(id) {
+  currentProblemId = id;
+  const p = PROBLEMS.find(x => x.id === id);
+  if (!p) return;
+
+  // Update sidebar active state
+  document.querySelectorAll('.problem-link').forEach(el => el.classList.remove('active'));
+  const sidebarBtn = document.getElementById(`sidebar-${id}`);
+  if (sidebarBtn) {
+    sidebarBtn.classList.add('active');
+    sidebarBtn.scrollIntoView({ block: 'nearest' });
+  }
+
+  // Hide overview, show problem view
+  document.getElementById('overviewPage').style.display = 'none';
+  document.getElementById('problemView').style.display = 'block';
+
+  const diffLabel = { easy: '简单', medium: '中等', hard: '困难' };
+  const diffClass = { easy: 'badge-easy', medium: 'badge-medium', hard: 'badge-hard' };
+
+  const prev = PROBLEMS.find(x => x.id === id - 1);
+  const next = PROBLEMS.find(x => x.id === id + 1);
+
+  const descHtml = p.description.split('\n').map(line =>
+    line.trim() ? `<p>${line}</p>` : ''
+  ).join('');
+
+  const stepsHtml = p.steps.map(s => `<li>${s}</li>`).join('');
+
+  const testCasesLeetcode = p.testCases.slice(0, 2).map((tc, i) => buildTestCase(tc, i, p.id, 'lc')).join('');
+  const testCasesAcm = p.testCases.map((tc, i) => buildTestCase(tc, i, p.id, 'acm')).join('');
+
+  document.getElementById('problemView').innerHTML = `
+    <div class="problem-card visible">
+      <!-- HEADER -->
+      <div class="prob-header">
+        <span class="prob-id">${p.leetcodeNum}</span>
+        <h1 class="prob-title">${p.title}</h1>
+        <span class="diff-badge ${diffClass[p.difficulty]}">${diffLabel[p.difficulty]}</span>
+      </div>
+      <div class="prob-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-desc-${id}')">解题过程</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-lc-${id}')">LeetCode 测试</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-acm-${id}')">ACM 测试</button>
+      </div>
+
+      <!-- TAB: 解题过程 -->
+      <div class="tab-panel active" id="tab-desc-${id}">
+        <div class="section-block">
+          <div class="section-label">题目描述</div>
+          <div class="desc-box">${descHtml}</div>
+          <div class="example-box">
+            <div class="ex-label">示例输入</div>
+            <div>${p.example.input}</div>
+            <div class="ex-label" style="margin-top:0.6rem;">示例输出</div>
+            <div>${p.example.output}</div>
+            ${p.example.explain ? `<div class="ex-label" style="margin-top:0.6rem;">解释</div><div>${p.example.explain}</div>` : ''}
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">解题思路 — ${p.approach}</div>
+          <div class="analysis-box">
+            <ul>${stepsHtml}</ul>
+            <div class="complexity-row">
+              <div class="complexity-item"><span>时间复杂度</span><strong>${p.timeO}</strong></div>
+              <div class="complexity-item"><span>空间复杂度</span><strong>${p.spaceO}</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">LeetCode 模式代码</div>
+          ${buildCodeBlock(p.leetcodeCode, 'python', `code-lc-${id}`)}
+        </div>
+
+        <div class="section-block">
+          <div class="section-label">ACM 模式代码</div>
+          ${buildCodeBlock(p.acmCode, 'python', `code-acm-${id}`)}
+        </div>
+      </div>
+
+      <!-- TAB: LeetCode 测试 -->
+      <div class="tab-panel" id="tab-lc-${id}">
+        <div class="section-block">
+          <div class="section-label">LeetCode 模式 — 完整代码</div>
+          ${buildCodeBlock(p.leetcodeCode, 'python', `lc-full-${id}`)}
+        </div>
+        <div class="section-block">
+          <div class="section-label">测试用例</div>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+            LeetCode 模式直接在平台提交 <code>class Solution</code>，以下展示对应的测试输入输出供参考。
+          </p>
+          ${testCasesLeetcode}
+        </div>
+      </div>
+
+      <!-- TAB: ACM 测试 -->
+      <div class="tab-panel" id="tab-acm-${id}">
+        <div class="section-block">
+          <div class="section-label">ACM 模式 — 完整代码（含 I/O）</div>
+          ${buildCodeBlock(p.acmCode, 'python', `acm-full-${id}`)}
+        </div>
+        <div class="section-block">
+          <div class="section-label">标准测试用例</div>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+            将完整代码保存为 <code>.py</code> 文件，输入通过 stdin 传入。
+          </p>
+          ${testCasesAcm}
+        </div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <div class="prob-nav">
+        <${prev ? `button onclick="showProblem(${prev.id})"` : 'button disabled'} class="prob-nav-btn${prev ? '' : ' disabled'}">
+          ← ${prev ? prev.title : '第一题'}
+        </button>
+        <button onclick="showOverview()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.85rem;font-family:inherit;">
+          回到总览
+        </button>
+        <${next ? `button onclick="showProblem(${next.id})"` : 'button disabled'} class="prob-nav-btn${next ? '' : ' disabled'}">
+          ${next ? next.title : '最后一题'} →
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Highlight code
+  document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildCodeBlock(code, lang, id) {
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return `
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-lang">python</span>
+        <button class="copy-btn" onclick="copyCode('${id}')">复制</button>
+      </div>
+      <pre><code id="${id}" class="language-python">${escaped}</code></pre>
+    </div>
+  `;
+}
+
+function buildTestCase(tc, index, probId, type) {
+  const inputEsc = tc.input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const outputEsc = tc.output.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `
+    <div class="test-case">
+      <div class="test-case-header">
+        <span class="test-title">测试用例 ${index + 1}</span>
+      </div>
+      <div class="test-io">
+        <div class="test-io-panel">
+          <div class="test-io-label">输入</div>
+          <div class="test-io-content">${inputEsc}</div>
+        </div>
+        <div class="test-io-panel">
+          <div class="test-io-label">期望输出</div>
+          <div class="test-io-content test-output">${outputEsc}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function switchTab(e, tabId) {
+  const parent = e.target.closest('.problem-card') || document.getElementById('problemView');
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function copyCode(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = el.closest('.code-block')?.querySelector('.copy-btn');
+    if (btn) {
+      btn.textContent = '已复制!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 1500);
+    }
+  });
+}
+
+function showOverview() {
+  currentProblemId = null;
+  document.getElementById('overviewPage').style.display = 'block';
+  document.getElementById('problemView').style.display = 'none';
+  document.querySelectorAll('.problem-link').forEach(el => el.classList.remove('active'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderSidebar();
+renderOverview();
+</script>
+</body>
+</html>
