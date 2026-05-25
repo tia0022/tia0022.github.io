@@ -620,6 +620,16 @@ function appendCard(c){
 }
 
 // ============================================================
+// API BASE URL — supports ?api=https://... for GitHub Pages
+// ============================================================
+const API_BASE = (() => {
+  const p = new URLSearchParams(location.search).get('api');
+  if(p) return p.replace(/\/$/, '');
+  if(location.hostname.endsWith('.github.io') || location.protocol === 'file:') return null;
+  return ''; // same origin (Next.js server)
+})();
+
+// ============================================================
 // LIVE CHAT
 // ============================================================
 async function sendMsg(){
@@ -651,27 +661,21 @@ async function sendMsg(){
 
   let fullResp='';
 
-  // Detect GitHub Pages or static hosting (no /api/chat available)
-  const isStaticHost = location.hostname.endsWith('.github.io') ||
-    location.protocol === 'file:' ||
-    (!location.hostname.includes('happycapy') && !location.hostname.includes('localhost') && !location.port);
-
-  if(isStaticHost){
+  if(API_BASE === null){
     typingDiv.querySelector('.bubble').innerHTML=`<div style="color:#94a3b8;font-size:12px;line-height:1.6">
-      <div style="color:#f59e0b;font-weight:600;margin-bottom:6px">🤖 ${cfg.name}</div>
-      实时 AI 对话需要后端服务支持。<br>
-      在 WAIC 现场演示中，本功能将连接明心数智 AI 网关，7 位小明实时响应。<br><br>
-      <span style="color:#64748b">— 点击左侧「演示模式」体验完整的 7 场景脚本演示 —</span>
+      <div style="color:#f59e0b;font-weight:600;margin-bottom:6px">${cfg.av} ${cfg.name}</div>
+      实时 AI 对话需要后端服务。请在 URL 后加：<br>
+      <code style="color:#38bdf8;font-size:11px">?api=https://你的服务地址</code><br><br>
+      <span style="color:#64748b">— 点击左侧「演示模式」体验完整 7 场景 —</span>
     </div>`;
     document.getElementById('send-btn').disabled=false;
-    document.getElementById('hdr-label').textContent=cfg.name+' · 演示模式';
+    document.getElementById('hdr-label').textContent=cfg.name+' · 需要后端';
     renderAgentStatus([]);
     return;
   }
 
   try{
-    // Call /api/chat proxy endpoint (same origin)
-    const res=await fetch('/api/chat',{
+    const res=await fetch(`${API_BASE}/api/chat`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({message:text,agentId,history:msgHistory.slice(-6)})
