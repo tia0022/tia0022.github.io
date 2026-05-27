@@ -193,17 +193,24 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 .vs-ai{font-weight:700;font-family:'Manrope',sans-serif}
 .vs-h{color:var(--muted);text-decoration:line-through}
 .ws-body{display:grid;grid-template-columns:3fr 2fr;gap:12px;overflow:hidden}
-.result-area{background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
-.bignum{font-family:'Manrope',sans-serif;font-size:42px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-.bignum .un{font-size:18px;font-weight:500;opacity:.7;margin-left:3px}
-.stmts{display:flex;flex-direction:column;gap:8px}
-.stmt{font-size:15px;display:flex;align-items:flex-start;gap:7px}
-.stmt::before{content:'→';color:var(--muted);flex-shrink:0;margin-top:2px}
+.result-area{background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;overflow-y:auto}
+.bignum{font-family:'Manrope',sans-serif;font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:2px}
+.bignum .un{font-size:20px;font-weight:500;opacity:.65;margin-left:4px}
+.ws-headline{font-size:16px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:4px}
+.ws-chips{display:flex;flex-direction:column;gap:6px}
+.ws-chip{font-size:13px;padding:7px 12px;border-radius:20px;border:1px solid;font-weight:500;letter-spacing:.01em}
+/* vs-box redesign */
+.vs-box{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:100px;text-align:center;background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.vs-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.vs-h{font-size:18px;font-weight:700;color:var(--muted);font-family:'Manrope',sans-serif}
+.vs-arrow{font-size:14px;color:var(--muted);margin:1px 0}
+.vs-ai{font-size:22px;font-weight:800;font-family:'Manrope',sans-serif;letter-spacing:-.02em}
 .output-area{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
-.ocard{background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:11px 14px;cursor:pointer;transition:border-color 150ms}
-.ocard:hover{border-color:var(--cc,var(--orch))}
-.ocard-title{font-size:11px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:6px}
-.ocard-meta{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.ocard{background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all 150ms;display:grid;grid-template-columns:28px 1fr;gap:4px 8px;align-items:start}
+.ocard:hover{border-color:var(--cc,var(--orch));background:rgba(255,255,255,.02);transform:translateX(2px)}
+.ocard-icon{font-size:20px;grid-row:1/3}
+.ocard-title{font-size:12px;font-weight:600;align-self:end}
+.ocard-meta{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.5}
 .tech-drawer{border:1px solid var(--border);border-radius:8px;overflow:hidden}
 .drawer-tog{display:flex;align-items:center;gap:7px;padding:8px 12px;cursor:pointer;font-size:11px;color:var(--muted);background:var(--bg-3);transition:background 150ms}
 .drawer-tog:hover{background:rgba(255,255,255,.03);color:var(--text)}
@@ -1160,34 +1167,39 @@ function buildSched(){
 function wsHTML(id,header,results,outputs,tech,hitl){
   const a=D.agents[id];
   const color=a.color;
+  const chips = results.stmts.map(s=>`<div class="ws-chip" style="border-color:${color}44;background:${color}12">${s}</div>`).join('');
+  const vsBlock = a.vsM ? `<div class="vs-box">
+    <div class="vs-label">传统人工</div>
+    <div class="vs-h">${a.vsH}</div>
+    <div class="vs-arrow">→</div>
+    <div class="vs-label" style="color:${color}">Minos AI</div>
+    <div class="vs-ai" style="color:${color}">${a.vsAI}</div>
+  </div>` : '';
   return `<div class="ws-hdr">
     <div class="ws-av" style="border-color:${color};--agent-glow:${color}44">${getAv(id,72)}</div>
     <div class="ws-info">
       <div class="ws-name" style="color:${color}">${a.name}</div>
       <div class="ws-role">${a.role} · ${header.time}</div>
-      <div class="ws-kpis">${Object.values(a.kpi).map(v=>`<span class="kpitag" style="color:${color};border-color:${color}44;background:${color}10">${v}</span>`).join('')}</div>
     </div>
-    <div class="vs-box">
-      <div class="vs-m">${a.vsM}</div>
-      <div class="vs-ai" style="color:${color}">${a.vsAI}</div>
-      <div class="vs-h">${a.vsH}</div>
-    </div>
+    ${vsBlock}
   </div>
   <div class="ws-body">
     <div class="result-area">
-      ${results.bignum?`<div class="bignum" style="color:${color}">${results.bignum}<span class="un">${results.unit||''}</span></div>`:''}
-      <div class="stmts">${results.stmts.map(s=>`<div class="stmt">${s}</div>`).join('')}</div>
+      ${results.bignum?`<div class="bignum" style="color:${color};text-shadow:0 0 40px ${color}44">${results.bignum}<span class="un">${results.unit||''}</span></div>`:''}
+      ${results.headline?`<div class="ws-headline">${results.headline}</div>`:''}
+      <div class="ws-chips">${chips}</div>
     </div>
     <div class="output-area">
       ${outputs.map(o=>`<div class="ocard" style="--cc:${color}">
-        <div class="ocard-title">${o.icon} ${o.title}</div>
+        <div class="ocard-icon">${o.icon}</div>
+        <div class="ocard-title">${o.title}</div>
         <div class="ocard-meta">${o.meta}</div>
       </div>`).join('')}
     </div>
   </div>
   <div class="tech-drawer" id="td-${id}">
     <div class="drawer-tog" onclick="document.getElementById('td-${id}').classList.toggle('open')">
-      <span class="darr">▶</span>展开技术工作流（调用了哪些工具、命中哪些规则）
+      <span class="darr">▶</span> 展开 AI 决策工作流
     </div>
     <div class="drawer-body">${tech.map(t=>`<span class="dk">${t.k}</span>  ${t.v}\n`).join('')}</div>
   </div>
@@ -1217,94 +1229,94 @@ function confirmHITL(id){
 function buildWorkstations(){
   // Supply
   document.getElementById('ws-supply').innerHTML=wsHTML('supply',
-    {time:'T+1h · 经营阶段'},
-    {bignum:'¥42,000',unit:'融资',stmts:[
-      'SKU 数字建档完成：景德镇手工茶杯 JDZ-CUP-WHT-260ML',
-      '识别账期 30 天资金缺口，启动贸易融资通道',
-      'T+4 小时融资到账，工厂已确认备货 500 只'
+    {time:'T+1h · 经营评估'},
+    {bignum:'¥42,000',unit:'',headline:'T+4小时融资到账，工厂立即解锁备货',stmts:[
+      '✓ SKU 建档 30 秒完成',
+      '✓ 账期缺口自动识别',
+      '✓ 履约评分 92/100'
     ]},
     [
-      {icon:'📦',title:'SKU 数字档案',meta:'JDZ-CUP-WHT-260ML · 260ml · 材质:瓷'},
-      {icon:'💰',title:'贸易融资申请单',meta:'¥42,000 · 利率 1.8%/月 · T+4h到账'},
-      {icon:'⚠️',title:'履约风险报告',meta:'评分 92/100 · 低风险 · 工厂产能充足'}
+      {icon:'📦',title:'SKU 数字档案',meta:'JDZ-CUP-WHT-260ML · 瓷 · 260ml'},
+      {icon:'💰',title:'贸易融资已批',meta:'¥42,000 · 1.8%/月 · T+4h 到账'},
+      {icon:'✅',title:'风险评估',meta:'低风险 · 工厂产能充足'}
     ],
     [
       {k:'数据源',v:'工厂物联网 API · 采购合同 · DE-交易云授信池'},
       {k:'模型',v:'minos-supply-v2.1.4'},
       {k:'命中规则',v:'Rule#11: 账期>20d → 产融通道; Rule#07: 资金缺口>¥30K → 立即申请'},
-      {k:'执行时长',v:'30s 建档 · 8s 风险评估 · 12s 融资申请'},
+      {k:'执行时长',v:'建档 30s · 风控 8s · 融资申请 12s'},
       {k:'上游传入',v:'orch::taskBundle::supply-2026-001'}
     ],
-    {icon:'🏦',text:'融资申请已提交，T+4h 确认到账后工厂自动解锁生产。',btn:'确认知悉'}
+    {icon:'🏦',text:'融资申请已提交，T+4h 确认到账，工厂自动解锁生产。',btn:'确认知悉'}
   );
 
   // Marketing
   document.getElementById('ws-mkt').innerHTML=wsHTML('mkt',
-    {time:'T+15h · 营销阶段'},
-    {bignum:'17',unit:'位达人',stmts:[
-      '命中洛杉矶本地美学生活、茶道、手工艺类达人 17 位',
-      '预计触达 50 万 + 潜在买家，平均互动率 8.8%',
-      '首批 3 位达人已确认接受样品，7 天内可上线内容'
+    {time:'T+15h · 达人营销'},
+    {bignum:'500,000+',unit:'',headline:'精准触达洛杉矶茶道买家，3位达人当天确认寄样',stmts:[
+      '✓ 17 位本地达人命中',
+      '✓ 互动率 8.8%（行业均值 3%）',
+      '✓ Listing + 脚本 90 秒生成'
     ]},
     [
-      {icon:'📱',title:'达人匹配报告',meta:'Top 17 · 粉丝 1w-50w · 互动率 8.8%'},
-      {icon:'🛍',title:'Amazon Listing 草稿',meta:'标题+5张图+Bullet Points · 英文 SEO优化'},
-      {icon:'🎬',title:'TikTok 视频脚本',meta:'30s 茶道文化故事 · 英文旁白 · 3个版本'}
+      {icon:'📱',title:'达人匹配报告',meta:'Top 17 · 1w-50w粉丝 · 互动 8.8%'},
+      {icon:'🛍',title:'Amazon Listing',meta:'英文 SEO 标题 · 5 张主图 · A+页面'},
+      {icon:'🎬',title:'TikTok 脚本',meta:'30s 茶道故事 · 英文旁白 · 3 版本'}
     ],
     [
       {k:'数据源',v:'TikTok Creator Marketplace · Instagram Graph API'},
-      {k:'模型',v:'minos-marketing-v3.0.1 + GPT内容生成'},
-      {k:'筛选条件',v:'洛杉矶本土 · 美学生活/茶道/手工艺 · 1w-50w粉丝 · 真实互动>5%'},
-      {k:'执行时长',v:'达人匹配 45s · Brief 生成 60s · Listing 90s'},
+      {k:'模型',v:'minos-marketing-v3.0.1 + claude-sonnet-4-6'},
+      {k:'筛选条件',v:'洛杉矶本土 · 茶道/美学/手工艺 · 真实互动>5%'},
+      {k:'执行时长',v:'达人匹配 45s · Brief 60s · Listing 90s'},
       {k:'上游依赖',v:'supply::sku-档案 · comp::listing-合规校验'}
     ],
-    {icon:'📋',text:'3 位达人（@zen.teahouse.la等）已接受样品邀约，确认锁定资产库并开始寄样。',btn:'锁定资产库 ▶'}
+    {icon:'📋',text:'@zen.teahouse.la 等 3 位达人已接受邀约，现在确认锁定资产库并开始寄样。',btn:'锁定资产库 ▶'}
   );
 
   // Compliance
   document.getElementById('ws-comp').innerHTML=wsHTML('comp',
-    {time:'T+1d · 合规阶段'},
-    {bignum:'¥18,200',unit:'退税',stmts:[
-      'HS Code 8 位归类完成：6912.00（陶瓷餐具），耗时 0.8 秒',
-      '出口退税五步法申报完成，退税率 13%，当天到账',
-      'FDA 食品接触器皿前置核验通过，加州 Sales Tax 9.5%'
+    {time:'T+1d · 合规通关'},
+    {bignum:'0.8 秒',unit:'',headline:'HS归类到退税申报，当天到账 ¥18,200',stmts:[
+      '✓ 传统需要 3 天',
+      '✓ FDA 预审通过，P=98%',
+      '✓ 退税率 13% · 全程合规'
     ]},
     [
-      {icon:'🏷',title:'HS Code 归类单',meta:'6912.00 · 陶瓷餐具 · 退税率 13%'},
-      {icon:'📋',title:'退税申报包',meta:'¥18,200 · 五联单 · 当天到账'},
-      {icon:'🏥',title:'FDA 合规报告',meta:'食品接触器皿 · 预审通过 · P(过关)=98%'}
+      {icon:'🏷',title:'HS Code 归类',meta:'6912.00 · 陶瓷餐具 · 退税率 13%'},
+      {icon:'💸',title:'退税申报包',meta:'¥18,200 · 五联单 · 当天到账'},
+      {icon:'🏥',title:'FDA 合规报告',meta:'食品接触 · 预审通过 · P=98%'}
     ],
     [
-      {k:'数据源',v:'海关HS库 2024版 · 国税局退税率表 · FDA数据库'},
+      {k:'数据源',v:'海关HS库 2024 · 国税退税率表 · FDA 数据库'},
       {k:'模型',v:'minos-compliance-v2.7.0'},
-      {k:'命中规则',v:'HS: 材质=瓷器+容量<500ml → 6912.00; 退税: 一般贸易出口13%'},
-      {k:'执行时长',v:'HS归类 0.8s · 退税申报 45s · FDA核验 120s'},
-      {k:'合规认证',v:'已通过国家网信办生成式AI备案 · 100%可审计'}
+      {k:'命中规则',v:'材质=瓷+容量<500ml → 6912.00; 一般贸易出口退税 13%'},
+      {k:'执行时长',v:'HS 归类 0.8s · 退税申报 45s · FDA 核验 120s'},
+      {k:'合规认证',v:'网信办生成式AI备案 · 100% 可审计'}
     ],
-    {icon:'✅',text:'合规包已提交，退税申报已在税局受理，预计今日到账 ¥18,200。',btn:'确认无误'}
+    {icon:'✅',text:'合规包已提交，退税申报受理中，预计今日到账 ¥18,200。',btn:'确认无误'}
   );
 
   // Logistics
   document.getElementById('ws-log').innerHTML=wsHTML('log',
-    {time:'T+3d → T+7d · 物流阶段'},
-    {bignum:'广州→LA 空运',unit:'',stmts:[
-      '原计划盐田→LA 海运 13 天，T+7d 港口罢工预警（P=0.87）',
-      'AI 15 分钟给出决策：首批切广州→LA 空运，溢价 $12/kg，时效 4 天',
-      '净利润仍为正（¥164/杯），账户健康分 98，无异常'
+    {time:'T+7d · 物流异常'},
+    {bignum:'15 分钟',unit:'',headline:'🚨 港口罢工预警 · AI 已切换空运方案',stmts:[
+      '🔴 盐田港罢工概率 87%',
+      '✓ 广州→LA 空运 · 4 天到达',
+      '✓ 净利仍 ¥164/杯 · 利润不受损'
     ]},
     [
-      {icon:'🚢',title:'原物流方案',meta:'盐田港→LA · 海运 · 13天 · $3.2/kg'},
-      {icon:'✈️',title:'空运切换方案',meta:'广州→LA · 空运 · 4天 · $15.2/kg'},
-      {icon:'📊',title:'ROI 决策单',meta:'溢价+¥36/只 · 净利仍¥164 · 时效↑9d'}
+      {icon:'🚢',title:'原方案',meta:'盐田→LA · 海运 · 13天 · $3.2/kg'},
+      {icon:'✈️',title:'切换方案',meta:'广州→LA · 空运 · 4天 · $15.2/kg'},
+      {icon:'📊',title:'ROI 对比',meta:'溢价 +¥36/只 · 净利仍 ¥164 · 时效 ↑9d'}
     ],
     [
-      {k:'数据源',v:'LBP港口工会公告 · 500+承运商轨迹 · 实时运价API'},
+      {k:'数据源',v:'LBP 港口工会公告 · 500+ 承运商轨迹 · 实时运价 API'},
       {k:'模型',v:'minos-logistics-v2.4.1'},
-      {k:'命中规则',v:'Rule#47: 罢工概率P>0.8→空运备案; Rule#12: 时效优先于成本'},
-      {k:'响应时长',v:'异常识别 2min · 方案生成 8min · 决策推送 5min = 15min'},
-      {k:'监控覆盖',v:'500+ 承运商 · 24h 不间断 · ETA 偏离±12h 自动预警'}
+      {k:'命中规则',v:'Rule#47: 罢工 P>0.8 → 空运备案; Rule#12: 时效优先于成本'},
+      {k:'响应时长',v:'异常识别 2min · 方案生成 8min · 推送 5min = 15min'},
+      {k:'监控覆盖',v:'500+ 承运商 · 24h 不间断 · ETA 偏离 ±12h 自动预警'}
     ],
-    {icon:'🚨',text:'港口罢工风险（P=0.87）· T+7d LBP 工人罢工预警。AI 建议：首批切空运，溢价 $12/kg，时效 4 天，净利仍为正。',btn:'确认切换空运 ▶',alert:true}
+    {icon:'🚨',text:'LBP 港口工人罢工概率 P=0.87，建议首批切广州→LA 空运。溢价 $12/kg，时效快 9 天，净利仍为正。',btn:'确认切换空运 ▶',alert:true}
   );
 
   // Analyst (includes profit dashboard)
