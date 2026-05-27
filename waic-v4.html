@@ -41,28 +41,44 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 #top.main{height:192px;min-height:192px;border-bottom:1px solid var(--border)}
 
 /* ─── GLOBE (CSS 3D) ─── */
-#globe-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#globe-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#060d22 0%,#020408 100%)}
+.starfield{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.star-layer{position:absolute;top:50%;left:50%;width:1px;height:1px;border-radius:50%}
 .globe-scene{perspective:600px;width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:all 800ms cubic-bezier(.4,0,.2,1)}
 #top.startup .globe-scene{--gs:460px}
 #top.main .globe-scene{--gs:0px;opacity:0;pointer-events:none}
-.globe-sphere{width:var(--gs,460px);height:var(--gs,460px);border-radius:50%;background:radial-gradient(ellipse at 35% 35%,#1a3a6e 0%,#0a1428 50%,#050810 100%);border:1px solid rgba(99,102,241,.2);position:relative;animation:globe-rot 20s linear infinite;transform-style:preserve-3d;box-shadow:inset -40px -20px 80px rgba(0,0,0,.6),0 0 60px rgba(99,102,241,.15);transition:all 800ms cubic-bezier(.4,0,.2,1)}
+.globe-sphere{
+  width:var(--gs,460px);height:var(--gs,460px);border-radius:50%;
+  background:radial-gradient(ellipse at 32% 30%,#1e4a8a 0%,#0d2448 30%,#061226 60%,#030810 100%);
+  border:1px solid rgba(99,102,241,.25);position:relative;
+  animation:globe-rot 22s linear infinite;transform-style:preserve-3d;
+  box-shadow:inset -50px -30px 100px rgba(0,0,0,.7),inset 20px 10px 40px rgba(99,102,241,.06),0 0 80px rgba(99,102,241,.2),0 0 160px rgba(56,189,248,.08);
+  transition:all 800ms cubic-bezier(.4,0,.2,1)
+}
 @keyframes globe-rot{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
 .globe-continents{position:absolute;inset:0;border-radius:50%;background:
-  radial-gradient(circle at 30% 45%,rgba(58,123,213,.25) 8%,transparent 9%),
-  radial-gradient(circle at 55% 38%,rgba(58,123,213,.2) 12%,transparent 13%),
-  radial-gradient(circle at 70% 50%,rgba(58,123,213,.18) 9%,transparent 10%),
-  radial-gradient(circle at 45% 60%,rgba(58,123,213,.15) 6%,transparent 7%),
-  radial-gradient(circle at 25% 30%,rgba(58,123,213,.2) 5%,transparent 6%)}
-.globe-shimmer{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 30% 25%,rgba(255,255,255,.08) 0%,transparent 50%)}
+  radial-gradient(ellipse at 56% 36%,rgba(42,100,180,.38) 14%,transparent 15%),
+  radial-gradient(ellipse at 60% 44%,rgba(38,90,160,.28) 18%,transparent 19%),
+  radial-gradient(ellipse at 68% 55%,rgba(35,80,150,.22) 12%,transparent 13%),
+  radial-gradient(ellipse at 28% 42%,rgba(50,110,190,.32) 10%,transparent 11%),
+  radial-gradient(ellipse at 20% 48%,rgba(45,100,175,.26) 8%,transparent 9%),
+  radial-gradient(ellipse at 44% 62%,rgba(38,88,155,.20) 7%,transparent 8%),
+  radial-gradient(ellipse at 38% 30%,rgba(40,95,170,.22) 9%,transparent 10%),
+  radial-gradient(ellipse at 72% 38%,rgba(36,82,148,.18) 6%,transparent 7%)}
+.globe-grid{position:absolute;inset:0;border-radius:50%;background:
+  repeating-linear-gradient(transparent,transparent 27px,rgba(99,102,241,.04) 27px,rgba(99,102,241,.04) 28px),
+  repeating-linear-gradient(90deg,transparent,transparent 27px,rgba(99,102,241,.04) 27px,rgba(99,102,241,.04) 28px)}
+.globe-shimmer{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 28% 22%,rgba(255,255,255,.10) 0%,transparent 45%)}
 .globe-nodes{position:absolute;inset:0;border-radius:50%}
 .gnode{position:absolute;transform:translate(-50%,-50%)}
-.gnode-pulse{width:10px;height:10px;border-radius:50%;animation:gnode-anim 1.5s ease-out infinite}
-@keyframes gnode-anim{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}
-.gnode-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%}
-.gnode-label{position:absolute;left:14px;top:-4px;white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(7,10,18,.8);padding:1px 6px;border-radius:3px;border:1px solid rgba(255,255,255,.1)}
-.glines{position:absolute;inset:0;border-radius:50%}
-.gline{stroke-dasharray:4 4;animation:gline-flow 3s linear infinite}
-@keyframes gline-flow{from{stroke-dashoffset:200}to{stroke-dashoffset:0}}
+.gnode-pulse{width:12px;height:12px;border-radius:50%;animation:gnode-anim 1.8s ease-out infinite}
+@keyframes gnode-anim{0%{transform:scale(1);opacity:.9}100%{transform:scale(3);opacity:0}}
+.gnode-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.gnode-label{position:absolute;left:16px;top:-5px;white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(7,10,18,.85);padding:2px 7px;border-radius:4px;border:1px solid rgba(255,255,255,.12);letter-spacing:.04em}
+.glines{position:absolute;inset:0;border-radius:50%;overflow:visible}
+.gline-sea{stroke-dasharray:5 4;animation:gline-flow 3.5s linear infinite;opacity:.7}
+.gline-air{stroke-dasharray:3 5;animation:gline-flow 4s linear infinite reverse;opacity:.5}
+@keyframes gline-flow{from{stroke-dashoffset:250}to{stroke-dashoffset:0}}
 
 /* ─── STARTUP CARD ─── */
 #startup-card{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:min(700px,88%);background:rgba(13,17,32,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(99,102,241,.35);border-radius:12px;padding:26px 30px 22px;transition:opacity 300ms ease,transform 300ms ease;z-index:10}
@@ -89,7 +105,8 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 #topbar{display:none;height:100%;padding:10px 16px;gap:0;overflow:hidden}
 #top.main #topbar{display:flex}
 .tb-globe{width:28%;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border);padding-right:12px;flex-shrink:0}
-.tb-globe-mini{width:80px;height:80px;flex-shrink:0;border-radius:50%;background:radial-gradient(ellipse at 35% 35%,#1a3a6e,#0a1428);border:1px solid rgba(99,102,241,.3);display:flex;align-items:center;justify-content:center;font-size:32px;animation:globe-rot 20s linear infinite}
+.tb-globe-mini{width:80px;height:80px;flex-shrink:0;border-radius:50%;background:radial-gradient(ellipse at 32% 30%,#1e4a8a,#0d2448 40%,#050e20);border:1px solid rgba(99,102,241,.35);box-shadow:0 0 18px rgba(99,102,241,.2),inset -10px -6px 20px rgba(0,0,0,.5);animation:globe-rot 22s linear infinite;position:relative;overflow:hidden}
+.tb-globe-mini::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 28% 22%,rgba(255,255,255,.08) 0%,transparent 50%),radial-gradient(ellipse at 55% 40%,rgba(42,100,180,.3) 10%,transparent 11%),radial-gradient(ellipse at 65% 55%,rgba(38,88,160,.25) 8%,transparent 9%),radial-gradient(ellipse at 25% 50%,rgba(45,100,175,.22) 7%,transparent 8%)}
 .tb-order{font-size:11px;line-height:1.9}
 .tb-order .lbl{color:var(--muted)}
 .tb-order .val{color:var(--text);font-weight:500}
@@ -331,34 +348,56 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 <div id="top" class="startup">
   <!-- Globe -->
   <div id="globe-wrap">
+    <div class="starfield"><div class="star-layer" id="stars"></div></div>
     <div class="globe-scene">
       <div class="globe-sphere" id="globe-sphere">
         <div class="globe-continents"></div>
+        <div class="globe-grid"></div>
         <div class="globe-shimmer"></div>
         <div class="globe-nodes">
-          <div class="gnode" style="top:42%;left:56%">
-            <div class="gnode-pulse" style="background:rgba(99,102,241,.4)"></div>
-            <div class="gnode-dot" style="background:#6366f1"></div>
+          <!-- 景德镇 -->
+          <div class="gnode" style="top:40%;left:55%">
+            <div class="gnode-pulse" style="background:rgba(99,102,241,.5)"></div>
+            <div class="gnode-dot" style="background:#6366f1;color:#6366f1"></div>
             <div class="gnode-label" style="color:#a5b4fc">景德镇</div>
           </div>
-          <div class="gnode" style="top:52%;left:62%">
-            <div class="gnode-pulse" style="background:rgba(56,189,248,.3)"></div>
-            <div class="gnode-dot" style="background:#38bdf8"></div>
+          <!-- 深圳港 -->
+          <div class="gnode" style="top:50%;left:61%">
+            <div class="gnode-pulse" style="background:rgba(56,189,248,.4)"></div>
+            <div class="gnode-dot" style="background:#38bdf8;color:#38bdf8"></div>
             <div class="gnode-label" style="color:#7dd3fc">深圳港</div>
           </div>
-          <div class="gnode" id="dest-node" style="top:44%;left:18%">
-            <div class="gnode-pulse" style="background:rgba(249,115,22,.3)"></div>
-            <div class="gnode-dot" style="background:#f97316"></div>
+          <!-- 目的地（联动切换） -->
+          <div class="gnode" id="dest-node" style="top:42%;left:17%">
+            <div class="gnode-pulse" style="background:rgba(249,115,22,.4)"></div>
+            <div class="gnode-dot" style="background:#f97316;color:#f97316"></div>
             <div class="gnode-label" id="dest-label" style="color:#fdba74">洛杉矶</div>
           </div>
         </div>
-        <svg class="glines" viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
-          <path id="route-line" d="M 286 230 Q 240 140 83 202" fill="none" stroke="rgba(99,102,241,.5)" stroke-width="1.5" class="gline"/>
-          <circle r="4" fill="#6366f1" opacity=".9">
-            <animateMotion dur="3s" repeatCount="indefinite">
-              <mpath href="#route-line"/>
-            </animateMotion>
+        <svg class="glines" viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible">
+          <!-- 主航路（海运 低弧） -->
+          <path id="route-sea" d="M 280 226 Q 250 200 180 195 Q 120 190 78 206" fill="none" stroke="rgba(56,189,248,.6)" stroke-width="1.8" class="gline-sea"/>
+          <!-- 空运备线（高弧 虚线） -->
+          <path id="route-air" d="M 280 226 Q 240 115 78 206" fill="none" stroke="rgba(99,102,241,.45)" stroke-width="1.4" class="gline-air"/>
+          <!-- 景德镇→深圳 短线 -->
+          <path id="route-inner" d="M 280 226 Q 285 235 295 232" fill="none" stroke="rgba(52,211,153,.5)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <!-- 海运运动点 -->
+          <circle r="4.5" fill="#38bdf8" opacity=".95" filter="url(#glow-b)">
+            <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#route-sea"/></animateMotion>
           </circle>
+          <circle r="2.5" fill="#38bdf8" opacity=".6">
+            <animateMotion dur="4s" begin="1.5s" repeatCount="indefinite"><mpath href="#route-sea"/></animateMotion>
+          </circle>
+          <!-- 空运运动点（闪现） -->
+          <circle r="3.5" fill="#6366f1" opacity=".8" id="air-dot">
+            <animateMotion dur="3s" repeatCount="indefinite"><mpath href="#route-air"/></animateMotion>
+          </circle>
+          <defs>
+            <filter id="glow-b" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
         </svg>
       </div>
     </div>
@@ -738,7 +777,23 @@ let vaultLanded = false;
 let baShown = false;
 let a16Shown = false;
 
+function buildStarField(){
+  const el=document.getElementById('stars');
+  if(!el) return;
+  // Generate 140 stars as box-shadow offsets from center
+  const rnd=(n)=>Math.round((Math.random()-.5)*n);
+  const stars=Array.from({length:140},()=>{
+    const x=rnd(1800), y=rnd(900);
+    const r=Math.random();
+    const size=r<.08?'0 0 2px 1px':'0 0 1px 0px';
+    const op=(Math.random()*.55+.2).toFixed(2);
+    return `${x}px ${y}px ${size} rgba(255,255,255,${op})`;
+  }).join(',');
+  el.style.boxShadow=stars;
+}
+
 function init(){
+  buildStarField();
   buildDots();
   buildTimeline();
   buildAgentBar();
