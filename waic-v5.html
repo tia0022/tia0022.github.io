@@ -672,12 +672,51 @@
 </div>
 
 <script>
-// ══ GLOBE LAUNCH ══════════════════════════════════════════
+// ══ GLOBE LAUNCH — full auto-play through all scenes ══════
+let autoPlaying = false;
+let pauseResolve = null;
+
+function breakPause(){ if(pauseResolve){ pauseResolve(); pauseResolve = null; } }
+function scenePause(ms){ return new Promise(r=>{ pauseResolve=r; setTimeout(r,ms); }); }
+
 function launchDemo(){
   document.getElementById('globe-ov').classList.add('out');
-  setTimeout(()=>{ document.getElementById('globe-ov').style.display='none'; }, 850);
+  setTimeout(async ()=>{
+    document.getElementById('globe-ov').style.display = 'none';
+    const btn = document.getElementById('nextBtn');
+    autoPlaying = true;
+    busy = false;
+    scene = -1;
+    // play all scenes in order
+    for(let i = 0; i < SCENES.length; i++){
+      if(!autoPlaying) break;
+      scene = i;
+      btn.disabled = true;
+      btn.textContent = i === SCENES.length-1 ? '完成 ✓' : '下一步 ›';
+      document.getElementById('sceneSelect').value = String(i);
+      await run(i);
+      if(!autoPlaying) break;
+      if(i < SCENES.length-1){
+        // inter-scene pause — presenter can click to skip immediately
+        btn.disabled = false;
+        btn.textContent = '跳过 ›';
+        await scenePause(2500);
+        btn.disabled = true;
+      }
+    }
+    autoPlaying = false;
+    btn.disabled = false;
+    btn.textContent = '▶ 重新演示';
+  }, 900);
 }
-document.addEventListener('keydown', e=>{ if(e.key===' '||e.key==='Enter'){ const ov=document.getElementById('globe-ov'); if(!ov.classList.contains('out')) launchDemo(); } });
+
+document.addEventListener('keydown', e=>{
+  const ov = document.getElementById('globe-ov');
+  if(e.key===' ' || e.key==='Enter'){
+    if(!ov.classList.contains('out')) launchDemo();
+    else if(autoPlaying && !busy) breakPause();
+  }
+});
 
 // ══ SVG AVATAR SYSTEM ═════════════════════════════════════
 function genAv(opts){
@@ -1101,6 +1140,8 @@ async function run(idx) {
 
 // ── CONTROLS ─────────────────────────────────────────────
 document.getElementById('nextBtn').addEventListener('click', async () => {
+  // during auto-play: skip inter-scene pause → immediately advance
+  if(autoPlaying){ if(!busy) breakPause(); return; }
   if (busy) return;
   scene++;
   if (scene >= SCENES.length) { scene = SCENES.length - 1; return; }
@@ -1184,6 +1225,7 @@ document.getElementById('sceneSelect').addEventListener('change', async (e) => {
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
+  autoPlaying = false; breakPause();
   scene = -1; busy = false;
   document.getElementById('msgs').innerHTML = '';
   document.getElementById('dlist').innerHTML = '';
