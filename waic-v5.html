@@ -682,17 +682,8 @@ function launchDemo(){
   document.getElementById('globe-ov').classList.add('out');
   setTimeout(()=>{
     document.getElementById('globe-ov').style.display='none';
-    // directly advance to scene 0 without relying on synthetic click
-    if (busy || scene >= 0) return;
-    scene = 0;
-    const btn = document.getElementById('nextBtn');
-    btn.disabled = true;
-    btn.textContent = '下一步 ›';
-    document.getElementById('sceneSelect').value = '0';
-    run(0).then(()=>{
-      if (scene < SCENES.length - 1) btn.textContent = '下一步 ›';
-    });
-  }, 950);
+    document.getElementById('nextBtn').click();
+  }, 900);
 }
 document.addEventListener('keydown', e=>{ if(e.key===' '||e.key==='Enter'){ const ov=document.getElementById('globe-ov'); if(!ov.classList.contains('out')) launchDemo(); } });
 
