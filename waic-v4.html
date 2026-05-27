@@ -596,36 +596,81 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 // ═══════════════════════════════════════════════════════
 // AVATAR SYSTEM — SVG character portraits per agent
 // ═══════════════════════════════════════════════════════
-function genAvSVG({ring='#6366f1',skin='#c8a070',hairC='#1a0e06',hairS='short-m',outfitC='#1a2030',extra=''}){
+function genAvSVG({ring='#6366f1',skin='#c8a070',hairC='#1a0e06',hairS='short-m',outfitC='#1a2030',female=false,extra=''}){
   const H={
     'short-m':`<path d="M18 23Q18 12 30 12Q42 12 42 23L42 19Q42 8 30 8Q18 8 18 19Z" fill="${hairC}"/>`,
-    'long-f': `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 36Q38 43 34 39L34 30Q38 26 38 20" fill="${hairC}"/><path d="M22 36Q22 43 26 39L26 30Q22 26 22 20" fill="${hairC}"/>`,
-    'bun-f':  `<path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/><circle cx="30" cy="11" r="5" fill="${hairC}"/>`,
-    'bob-f':  `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 31Q38 34 34 33L34 28Q40 25 40 20" fill="${hairC}"/><path d="M20 31Q22 34 26 33L26 28Q20 25 20 20" fill="${hairC}"/>`,
-    'cap-m':  `<path d="M18 22Q18 13 30 13Q42 13 42 22L41 19Q40 11 30 11Q20 11 19 19Z" fill="${hairC}"/><rect x="16" y="19" width="28" height="4" rx="1" fill="${outfitC}"/><path d="M18 19Q18 12 30 12Q42 12 42 19Z" fill="${outfitC}88"/>`,
-    'ponytail-f':`<path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/><path d="M41 20Q49 23 47 31Q45 34 44 30Q44 22 41 20" fill="${hairC}"/>`,
-    'silver': `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 19Q42 8 30 8Q18 8 18 19Z" fill="${hairC}"/>`,
-    'crew-m': `<path d="M19 22Q20 15 30 15Q40 15 41 22L40 19Q39 12 30 12Q21 12 20 19Z" fill="${hairC}"/>`,
+    'long-f': `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 36Q38 44 34 40L34 30Q38 26 38 20" fill="${hairC}"/><path d="M22 36Q22 44 26 40L26 30Q22 26 22 20" fill="${hairC}"/><path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/>`,
+    'bun-f':  `<path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/><circle cx="30" cy="11" r="5.5" fill="${hairC}"/><path d="M26 13Q30 8 34 13" fill="${hairC}"/>`,
+    'bob-f':  `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 32Q38 36 34 34L34 28Q40 25 40 20" fill="${hairC}"/><path d="M20 32Q22 36 26 34L26 28Q20 25 20 20" fill="${hairC}"/><path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/>`,
+    'cap-m':  `<path d="M18 22Q18 13 30 13Q42 13 42 22L41 19Q40 11 30 11Q20 11 19 19Z" fill="${hairC}"/><rect x="16" y="19" width="28" height="4.5" rx="2" fill="${ring}cc"/><path d="M18 20Q18 13 30 13Q42 13 42 20Z" fill="${ring}44"/><rect x="38" y="22" width="8" height="2.5" rx="1.2" fill="${ring}bb"/>`,
+    'ponytail-f':`<path d="M18 23Q18 12 30 12Q42 12 42 23" fill="${hairC}"/><path d="M40.5 18Q50 22 48 33Q46 37 45 32Q45 22 40.5 18" fill="${hairC}"/><circle cx="40" cy="18" r="2.2" fill="${ring}88"/>`,
+    'silver': `<path d="M18 23Q18 12 30 12Q42 12 42 23L42 19Q42 8 30 8Q18 8 18 19Z" fill="${hairC}"/><path d="M20 14Q30 8 40 14" fill="none" stroke="${ring}55" stroke-width="2"/>`,
+    'crew-m': `<path d="M19 22Q20 14 30 14Q40 14 41 22L40 18Q39 11 30 11Q21 11 20 18Z" fill="${hairC}"/>`,
   };
-  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="avcp${Math.random().toString(36).slice(2,6)}"><circle cx="30" cy="30" r="29"/></clipPath></defs><circle cx="30" cy="30" r="30" fill="#0d1120"/><circle cx="30" cy="30" r="28.5" fill="none" stroke="${ring}" stroke-width="1.5" opacity="0.8"/><path d="M5 60Q14 43 30 41Q46 43 55 60" fill="${outfitC}"/><circle cx="30" cy="26" r="12" fill="${skin}"/>${H[hairS]||H['short-m']}<circle cx="25.5" cy="25.5" r="1.7" fill="${hairC}"/><circle cx="34.5" cy="25.5" r="1.7" fill="${hairC}"/>${extra}</svg>`;
+  // female earrings
+  const earrings = female ? `<circle cx="18" cy="28" r="1.8" fill="${ring}" opacity=".9"/><circle cx="42" cy="28" r="1.8" fill="${ring}" opacity=".9"/>` : '';
+  // face: eyebrows + eyes + nose + mouth
+  const face=`
+    <path d="M23.5 22.5Q25.5 21.5 27.5 22.5" fill="none" stroke="${hairC}" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M32.5 22.5Q34.5 21.5 36.5 22.5" fill="none" stroke="${hairC}" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="25.5" cy="25" r="2" fill="${hairC}"/>
+    <circle cx="26.3" cy="24.3" r=".7" fill="white" opacity=".6"/>
+    <circle cx="34.5" cy="25" r="2" fill="${hairC}"/>
+    <circle cx="35.3" cy="24.3" r=".7" fill="white" opacity=".6"/>
+    <ellipse cx="30" cy="29.5" rx="1.2" ry=".9" fill="${skin}" stroke="${hairC}55" stroke-width=".6"/>
+    <path d="M27 32.5Q30 35 33 32.5" fill="none" stroke="${hairC}99" stroke-width="1.4" stroke-linecap="round"/>
+    ${earrings}
+  `;
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="30" fill="#0d1120"/><circle cx="30" cy="30" r="28.5" fill="none" stroke="${ring}" stroke-width="1.5" opacity=".85"/><path d="M5 60Q14 43 30 41Q46 43 55 60" fill="${outfitC}"/><circle cx="30" cy="26" r="12" fill="${skin}"/>${H[hairS]||H['short-m']}${face}${extra}</svg>`;
 }
 const AVATARS={
-  orch:   genAvSVG({ring:'#6366f1',skin:'#b8c8d8',hairC:'#8898aa',hairS:'silver',outfitC:'#1e2260',extra:'<rect x="23.5" y="41" width="13" height="5.5" rx="2" fill="#6366f1"/><text x="30" y="46.5" text-anchor="middle" fill="white" font-size="5.5" font-weight="bold" font-family="sans-serif">MINOS</text>'}),
-  supply: genAvSVG({ring:'#00c9a7',skin:'#c8a070',hairC:'#1a0e06',hairS:'short-m',outfitC:'#1a3330',extra:'<path d="M27 41L30 52L33 41L31 41L30 48L29 41Z" fill="#e8f4f0"/><path d="M29 41L30 48L31 41" fill="#00c9a7"/>'}),
-  mkt:    genAvSVG({ring:'#f97316',skin:'#f0c090',hairC:'#3d2010',hairS:'ponytail-f',outfitC:'#ea580c',extra:'<path d="M17 24Q17 19 19 18L19 26Q17 26 17 24" fill="#f97316"/><path d="M43 24Q43 19 41 18L41 26Q43 26 43 24" fill="#f97316"/><path d="M19 18Q30 13 41 18" fill="none" stroke="#f97316" stroke-width="1.8"/>'}),
-  comp:   genAvSVG({ring:'#f59e0b',skin:'#d4a870',hairC:'#2a1a0a',hairS:'short-m',outfitC:'#1a2030',extra:'<path d="M27.5 41L30 51L32.5 41L31 41L30 48L29 41Z" fill="#f0f4f8"/><path d="M28.5 41L30 48L31.5 41" fill="#f59e0b"/><rect x="22" y="23" width="7.5" height="5" rx="2" fill="none" stroke="#f59e0b" stroke-width="1.2"/><rect x="30.5" y="23" width="7.5" height="5" rx="2" fill="none" stroke="#f59e0b" stroke-width="1.2"/><line x1="29.5" y1="25.5" x2="30.5" y2="25.5" stroke="#f59e0b" stroke-width="1.2"/>'}),
-  log:    genAvSVG({ring:'#38bdf8',skin:'#b87840',hairC:'#1a0c04',hairS:'cap-m',outfitC:'#1a3050',extra:''}),
-  ana:    genAvSVG({ring:'#a78bfa',skin:'#f0c0a0',hairC:'#2a1808',hairS:'bun-f',outfitC:'#2a1a40',extra:'<rect x="24" y="38" width="7.5" height="2.5" rx="1.2" fill="#a78bfa" opacity="0.9"/>'}),
-  pay:    genAvSVG({ring:'#0ea5e9',skin:'#f0d0b0',hairC:'#2a1a10',hairS:'bob-f',outfitC:'#0a1a30',extra:''}),
-  cs:     genAvSVG({ring:'#ec4899',skin:'#f8d0b0',hairC:'#3d2010',hairS:'long-f',outfitC:'#3a0a20',extra:'<path d="M17 25Q17 20 19 19L19 27Q17 27 17 25" fill="#ec4899"/><path d="M43 25Q43 20 41 19L41 27Q43 27 43 25" fill="#ec4899"/><path d="M19 19Q30 14 41 19" fill="none" stroke="#ec4899" stroke-width="1.8"/>'}),
-  vault:  genAvSVG({ring:'#34d399',skin:'#c89060',hairC:'#1a1008',hairS:'short-m',outfitC:'#0a1e18',extra:'<rect x="22" y="23" width="7.5" height="5" rx="1.5" fill="none" stroke="#34d399" stroke-width="1.2"/><rect x="30.5" y="23" width="7.5" height="5" rx="1.5" fill="none" stroke="#34d399" stroke-width="1.2"/><line x1="29.5" y1="25.5" x2="30.5" y2="25.5" stroke="#34d399" stroke-width="1.2"/>'}),
-  risk:   genAvSVG({ring:'#64748b',skin:'#b09068',hairC:'#1a0e08',hairS:'crew-m',outfitC:'#1a1c28',extra:''}),
-  stock:  genAvSVG({ring:'#d97706',skin:'#c89060',hairC:'#2a1c08',hairS:'cap-m',outfitC:'#2a1c08',extra:'<rect x="8" y="44" width="7" height="5" rx="1" fill="#3a2a10"/><rect x="45" y="44" width="7" height="5" rx="1" fill="#3a2a10"/>'}),
-  scout:  genAvSVG({ring:'#facc15',skin:'#f0c888',hairC:'#3d2808',hairS:'ponytail-f',outfitC:'#2a2408',extra:'<circle cx="42" cy="34" r="4.5" fill="none" stroke="#facc15" stroke-width="1.5"/>'}),
-  ip:     genAvSVG({ring:'#7c3aed',skin:'#c8a060',hairC:'#1a0e06',hairS:'short-m',outfitC:'#1a1228',extra:''}),
-  security:genAvSVG({ring:'#475569',skin:'#a0b0c0',hairC:'#2a3848',hairS:'crew-m',outfitC:'#101820',extra:'<path d="M22 17Q30 12 38 17Q38 21 30 22Q22 21 22 17" fill="#2a3848"/>'}),
-  brand:  genAvSVG({ring:'#db2777',skin:'#f0b0c0',hairC:'#3d1420',hairS:'long-f',outfitC:'#2a0a18',extra:'<path d="M20 39Q30 36 40 39Q36 44 30 43Q24 44 20 39" fill="#db2777" opacity="0.65"/>'}),
-  price:  genAvSVG({ring:'#16a34a',skin:'#c8a880',hairC:'#1a1008',hairS:'short-m',outfitC:'#081a10',extra:''}),
+  // L0 主控 — 银发 AI 形象，发光眼，MINOS 徽章
+  orch: genAvSVG({ring:'#6366f1',skin:'#b8d0e8',hairC:'#9ab0c8',hairS:'silver',outfitC:'#1a1c50',
+    extra:'<circle cx="25.5" cy="25" r="2.5" fill="#6366f1" opacity=".9"/><circle cx="34.5" cy="25" r="2.5" fill="#6366f1" opacity=".9"/><circle cx="25.5" cy="25" r="1" fill="white"/><circle cx="34.5" cy="25" r="1" fill="white"/><rect x="23" y="41" width="14" height="5" rx="2.5" fill="#6366f1"/><text x="30" y="45.5" text-anchor="middle" fill="white" font-size="5" font-weight="bold" font-family="sans-serif">MINOS</text>'}),
+
+  // 经营评估 — 男，商务西装，领带
+  supply: genAvSVG({ring:'#00c9a7',skin:'#c8a878',hairC:'#180e04',hairS:'short-m',outfitC:'#162820',
+    extra:'<path d="M30 41L30 54" stroke="#00c9a7" stroke-width="2.5" stroke-linecap="round"/><path d="M27 43L30 41L33 43" fill="none" stroke="#00c9a7" stroke-width="1.5"/><path d="M25 41Q30 38 35 41" fill="#00c9a7" opacity=".3"/>'}),
+
+  // 达人营销 — 女，马尾，耳机，橙色
+  mkt: genAvSVG({ring:'#f97316',skin:'#f2c090',hairC:'#2c1408',hairS:'ponytail-f',outfitC:'#c04810',female:true,
+    extra:'<path d="M16 26Q16 21 18 19L18 28Q16 28 16 26Z" fill="#f97316"/><circle cx="17" cy="24" r="3.5" fill="none" stroke="#f97316" stroke-width="2"/><path d="M44 26Q44 21 42 19L42 28Q44 28 44 26Z" fill="#f97316"/><circle cx="43" cy="24" r="3.5" fill="none" stroke="#f97316" stroke-width="2"/>'}),
+
+  // 合规 — 男，严肃，眼镜，深色西装
+  comp: genAvSVG({ring:'#f59e0b',skin:'#d0a060',hairC:'#1a1006',hairS:'short-m',outfitC:'#0e1828',
+    extra:'<rect x="22" y="23.5" width="7.5" height="4.5" rx="2" fill="none" stroke="#f59e0b" stroke-width="1.4"/><rect x="30.5" y="23.5" width="7.5" height="4.5" rx="2" fill="none" stroke="#f59e0b" stroke-width="1.4"/><line x1="29.5" y1="25.8" x2="30.5" y2="25.8" stroke="#f59e0b" stroke-width="1.4"/><line x1="22" y1="23.8" x2="20" y2="23" stroke="#f59e0b" stroke-width="1.2"/><line x1="38" y1="23.8" x2="40" y2="23" stroke="#f59e0b" stroke-width="1.2"/>'}),
+
+  // 物流 — 男，工装帽，蓝色，对讲机
+  log: genAvSVG({ring:'#38bdf8',skin:'#b87848',hairC:'#120c04',hairS:'cap-m',outfitC:'#0e2040',
+    extra:'<rect x="8" y="37" width="5.5" height="9" rx="1.5" fill="#1e3a5f"/><rect x="9" y="38.5" width="3.5" height="2" rx=".8" fill="#38bdf8" opacity=".7"/><circle cx="9.5" cy="36.5" r=".8" fill="#38bdf8"/><line x1="10.5" y1="36.5" x2="10.5" y2="34" stroke="#38bdf8" stroke-width=".8"/>'}),
+
+  // 分析师 — 女，盘发，眼镜，紫色
+  ana: genAvSVG({ring:'#a78bfa',skin:'#f0c0a0',hairC:'#1a0c04',hairS:'bun-f',outfitC:'#1a1030',female:true,
+    extra:'<rect x="22.5" y="23" width="7" height="4" rx="2" fill="none" stroke="#a78bfa" stroke-width="1.3"/><rect x="30.5" y="23" width="7" height="4" rx="2" fill="none" stroke="#a78bfa" stroke-width="1.3"/><line x1="29.5" y1="25" x2="30.5" y2="25" stroke="#a78bfa" stroke-width="1.3"/><line x1="22.5" y1="23.5" x2="20.5" y2="22.5" stroke="#a78bfa" stroke-width="1.1"/><line x1="37.5" y1="23.5" x2="39.5" y2="22.5" stroke="#a78bfa" stroke-width="1.1"/>'}),
+
+  // L2 支持层
+  pay:   genAvSVG({ring:'#0ea5e9',skin:'#f0d0b0',hairC:'#1a1008',hairS:'bob-f',outfitC:'#081828',female:true,
+    extra:'<circle cx="40" cy="35" r="6" fill="none" stroke="#0ea5e9" stroke-width="1.2" opacity=".6"/><text x="40" y="37.5" text-anchor="middle" fill="#0ea5e9" font-size="6" font-weight="bold" font-family="sans-serif">$</text>'}),
+  cs:    genAvSVG({ring:'#ec4899',skin:'#f8c8a8',hairC:'#2c1008',hairS:'long-f',outfitC:'#2c0818',female:true,
+    extra:'<path d="M16.5 25Q16.5 20 18.5 18.5L18.5 27Q16.5 27 16.5 25Z" fill="#ec4899"/><circle cx="17.5" cy="23.5" r="3" fill="none" stroke="#ec4899" stroke-width="1.8"/><path d="M43.5 25Q43.5 20 41.5 18.5L41.5 27Q43.5 27 43.5 25Z" fill="#ec4899"/><circle cx="42.5" cy="23.5" r="3" fill="none" stroke="#ec4899" stroke-width="1.8"/>'}),
+  vault: genAvSVG({ring:'#34d399',skin:'#c89060',hairC:'#1a1008',hairS:'short-m',outfitC:'#0a1a10',
+    extra:'<rect x="24" y="37" width="12" height="9" rx="2" fill="none" stroke="#34d399" stroke-width="1.3"/><path d="M27 37L27 34Q27 31 30 31Q33 31 33 34L33 37" fill="none" stroke="#34d399" stroke-width="1.3"/><circle cx="30" cy="42" r="1.5" fill="#34d399"/>'}),
+  risk:  genAvSVG({ring:'#64748b',skin:'#b09068',hairC:'#1a0e08',hairS:'crew-m',outfitC:'#10141e',
+    extra:'<path d="M24 36Q30 32 36 36Q36 42 30 44Q24 42 24 36Z" fill="none" stroke="#64748b" stroke-width="1.3"/><circle cx="30" cy="38.5" r="1.5" fill="#64748b"/>'}),
+  stock: genAvSVG({ring:'#d97706',skin:'#c89060',hairC:'#1a1008',hairS:'cap-m',outfitC:'#201008',
+    extra:'<rect x="8" y="43" width="7" height="6" rx="1" fill="#2a1808"/><rect x="45" y="43" width="7" height="6" rx="1" fill="#2a1808"/>'}),
+
+  // L3 扩展层
+  scout: genAvSVG({ring:'#facc15',skin:'#f0c888',hairC:'#2c1808',hairS:'ponytail-f',outfitC:'#1e1c08',female:true,
+    extra:'<circle cx="42" cy="33" r="5" fill="none" stroke="#facc15" stroke-width="1.5"/><line x1="45.5" y1="36.5" x2="48" y2="39" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>'}),
+  ip:    genAvSVG({ring:'#7c3aed',skin:'#c8a060',hairC:'#1a0e06',hairS:'short-m',outfitC:'#0e0820',
+    extra:'<path d="M26 37Q30 34 34 37Q34 42 30 44Q26 42 26 37Z" fill="#7c3aed" opacity=".5"/>'}),
+  security:genAvSVG({ring:'#475569',skin:'#a0b0c0',hairC:'#1a2838',hairS:'crew-m',outfitC:'#0a0e18',
+    extra:'<path d="M22 16Q30 12 38 16Q38 21 30 22Q22 21 22 16Z" fill="#1a2838"/>'}),
+  brand: genAvSVG({ring:'#db2777',skin:'#f0b0b8',hairC:'#2c0a18',hairS:'long-f',outfitC:'#200818',female:true,
+    extra:'<path d="M20 39Q30 36 40 39Q36 44 30 43Q24 44 20 39Z" fill="#db2777" opacity=".6"/>'}),
+  price: genAvSVG({ring:'#16a34a',skin:'#c8a880',hairC:'#1a1008',hairS:'short-m',outfitC:'#081408',
+    extra:'<path d="M26 38L28 36L30 38L32 36L34 38L32 40L30 38L28 40Z" fill="none" stroke="#16a34a" stroke-width="1.2"/>'}),
 };
 function getAv(id,size){
   const svg=AVATARS[id]||`<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="${D.agents[id]?.color||'#6366f1'}40"/></svg>`;
