@@ -363,21 +363,50 @@
 .dc-ba{background:rgba(99,102,241,.04);border-color:rgba(99,102,241,.2)!important;overflow:visible}
 
 /* ── GLOBE OVERLAY ─────────────────────────────────────── */
-#globe-ov{position:fixed;inset:0;z-index:9000;background:#040810;display:flex;align-items:center;justify-content:center;gap:72px;transition:opacity .8s ease,transform .8s ease}
-#globe-ov.out{opacity:0;transform:scale(1.03);pointer-events:none}
-#ov-globe{width:340px;height:340px;flex-shrink:0;position:relative}
-.ov-sphere{width:100%;height:100%;border-radius:50%;background:radial-gradient(ellipse at 32% 30%,#1e4a8a,#0d2448 35%,#061226 65%,#030810 100%);border:1px solid rgba(99,102,241,.28);animation:ov-rot 22s linear infinite;position:relative;box-shadow:0 0 70px rgba(99,102,241,.18),inset -40px -20px 80px rgba(0,0,0,.6)}
-@keyframes ov-rot{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
-.ov-land{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 56% 36%,rgba(42,100,180,.36) 14%,transparent 15%),radial-gradient(ellipse at 60% 48%,rgba(38,88,160,.24) 18%,transparent 19%),radial-gradient(ellipse at 26% 44%,rgba(50,110,190,.26) 10%,transparent 11%)}
-.ov-light{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 28% 22%,rgba(255,255,255,.08) 0%,transparent 45%)}
-.ov-nodes{position:absolute;inset:0;border-radius:50%}
+#globe-ov{position:fixed;inset:0;z-index:9000;background:#030711;display:flex;align-items:center;justify-content:center;gap:72px;transition:opacity .85s ease;overflow:hidden}
+#globe-ov.out{opacity:0;pointer-events:none}
+/* star field */
+#globe-ov::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(1px 1px at 7% 12%,rgba(255,255,255,.8) 0,transparent 100%),radial-gradient(1px 1px at 19% 6%,rgba(255,255,255,.6) 0,transparent 100%),radial-gradient(1px 1px at 33% 19%,rgba(255,255,255,.7) 0,transparent 100%),radial-gradient(1px 1px at 55% 4%,rgba(255,255,255,.85) 0,transparent 100%),radial-gradient(1px 1px at 71% 11%,rgba(255,255,255,.5) 0,transparent 100%),radial-gradient(1px 1px at 86% 22%,rgba(255,255,255,.75) 0,transparent 100%),radial-gradient(1px 1px at 6% 38%,rgba(255,255,255,.45) 0,transparent 100%),radial-gradient(1px 1px at 92% 38%,rgba(255,255,255,.6) 0,transparent 100%),radial-gradient(1px 1px at 14% 65%,rgba(255,255,255,.5) 0,transparent 100%),radial-gradient(1px 1px at 80% 58%,rgba(255,255,255,.7) 0,transparent 100%),radial-gradient(1px 1px at 40% 80%,rgba(255,255,255,.6) 0,transparent 100%),radial-gradient(1px 1px at 62% 74%,rgba(255,255,255,.5) 0,transparent 100%),radial-gradient(1px 1px at 25% 88%,rgba(255,255,255,.7) 0,transparent 100%),radial-gradient(1px 1px at 77% 84%,rgba(255,255,255,.55) 0,transparent 100%),radial-gradient(2px 2px at 48% 50%,rgba(255,255,255,.25) 0,transparent 100%),radial-gradient(1px 1px at 95% 68%,rgba(255,255,255,.45) 0,transparent 100%),radial-gradient(1px 1px at 3% 80%,rgba(255,255,255,.35) 0,transparent 100%),radial-gradient(2px 2px at 88% 90%,rgba(255,255,255,.5) 0,transparent 100%)}
+/* globe container — atmospheric glow rings via pseudo-elements */
+#ov-globe{width:360px;height:360px;flex-shrink:0;position:relative;z-index:1}
+#ov-globe::before{content:'';position:absolute;inset:-22px;border-radius:50%;background:radial-gradient(ellipse at center,transparent 46%,rgba(56,189,248,.09) 56%,rgba(99,102,241,.07) 68%,transparent 80%);pointer-events:none}
+#ov-globe::after{content:'';position:absolute;inset:-6px;border-radius:50%;box-shadow:0 0 0 1px rgba(99,102,241,.18),0 0 50px 14px rgba(99,102,241,.1),0 0 100px 28px rgba(56,189,248,.05);pointer-events:none}
+/* the sphere — static deep-space gradient, overflow:hidden clips continent blobs */
+.ov-sphere{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  background:radial-gradient(ellipse at 32% 28%,rgba(255,255,255,.04) 0%,transparent 38%),
+    radial-gradient(ellipse at 68% 74%,rgba(0,0,0,.35) 0%,transparent 38%),
+    radial-gradient(ellipse at 50% 50%,#0d2a5e 0%,#071428 42%,#030a18 100%);
+  box-shadow:inset -36px -20px 64px rgba(0,0,0,.55),inset 8px 6px 28px rgba(99,102,241,.04)}
+/* continent blobs — translateX scroll (not rotateY — no squish!) */
+.ov-continents{position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 64% 42%,rgba(50,120,200,.28) 13%,transparent 14%),
+    radial-gradient(ellipse at 70% 55%,rgba(44,98,176,.22) 17%,transparent 18%),
+    radial-gradient(ellipse at 77% 46%,rgba(38,88,158,.16) 11%,transparent 12%),
+    radial-gradient(ellipse at 30% 48%,rgba(56,126,206,.24) 10%,transparent 11%),
+    radial-gradient(ellipse at 22% 55%,rgba(48,110,190,.16) 8%,transparent 9%),
+    radial-gradient(ellipse at 48% 68%,rgba(42,95,165,.14) 7%,transparent 8%),
+    radial-gradient(ellipse at 84% 34%,rgba(36,82,148,.11) 6%,transparent 7%);
+  animation:ov-cont 32s linear infinite}
+@keyframes ov-cont{from{transform:translateX(0)}to{transform:translateX(-26px)}}
+/* lat/lon grid lines */
+.ov-grid{position:absolute;inset:0;opacity:.065;
+  background:repeating-linear-gradient(transparent,transparent 29px,rgba(99,102,241,1) 29px,rgba(99,102,241,1) 30px),
+    repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(99,102,241,1) 29px,rgba(99,102,241,1) 30px)}
+/* specular light sheen */
+.ov-light{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 26% 20%,rgba(255,255,255,.07) 0%,transparent 44%)}
+/* city nodes — sit OUTSIDE the sphere (sibling) so they don't get clipped */
+.ov-nodes{position:absolute;inset:0}
 .ov-node{position:absolute;transform:translate(-50%,-50%)}
-.ov-pulse{width:10px;height:10px;border-radius:50%;animation:ovp 1.8s ease-out infinite}
-@keyframes ovp{0%{transform:scale(1);opacity:.9}100%{transform:scale(3);opacity:0}}
-.ov-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;box-shadow:0 0 6px currentColor}
-.ov-lbl{position:absolute;left:14px;top:-5px;white-space:nowrap;font-size:11px;font-family:monospace;background:rgba(4,8,16,.88);padding:2px 6px;border-radius:4px;border:1px solid rgba(255,255,255,.1)}
-.ov-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-#ov-info{max-width:360px}
+.ov-pulse{width:10px;height:10px;border-radius:50%;animation:ovp 2s ease-out infinite}
+@keyframes ovp{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+.ov-dot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.ov-lbl{position:absolute;left:14px;top:-6px;white-space:nowrap;font-size:11px;font-weight:600;font-family:monospace;background:rgba(3,7,17,.9);padding:2px 8px;border-radius:4px;border:1px solid rgba(255,255,255,.12);letter-spacing:.03em}
+/* route SVG — sibling of sphere, sits above it */
+.ov-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+#ov-info{max-width:380px;z-index:1;position:relative}
 .ov-tag{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#818cf8;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:18px}
 .ov-title{font-size:36px;font-weight:800;line-height:1.25;color:#fff;margin-bottom:12px;letter-spacing:-.02em}
 .ov-sub{font-size:14px;color:#94a3b8;line-height:1.7;margin-bottom:22px}
@@ -426,40 +455,44 @@
 <!-- ══ GLOBE OPENING OVERLAY ══ -->
 <div id="globe-ov">
   <div id="ov-globe">
+    <!-- Static sphere — continent blobs scroll via translateX inside overflow:hidden -->
     <div class="ov-sphere">
-      <div class="ov-land"></div>
+      <div class="ov-continents"></div>
+      <div class="ov-grid"></div>
       <div class="ov-light"></div>
-      <div class="ov-nodes">
-        <div class="ov-node" style="top:42%;left:55%">
-          <div class="ov-pulse" style="background:rgba(99,102,241,.5)"></div>
-          <div class="ov-dot" style="background:#6366f1;color:#6366f1"></div>
-          <div class="ov-lbl" style="color:#a5b4fc">景德镇</div>
-        </div>
-        <div class="ov-node" style="top:50%;left:61%">
-          <div class="ov-pulse" style="background:rgba(56,189,248,.4)"></div>
-          <div class="ov-dot" style="background:#38bdf8;color:#38bdf8"></div>
-          <div class="ov-lbl" style="color:#7dd3fc">深圳港</div>
-        </div>
-        <div class="ov-node" style="top:42%;left:18%">
-          <div class="ov-pulse" style="background:rgba(249,115,22,.4)"></div>
-          <div class="ov-dot" style="background:#f97316;color:#f97316"></div>
-          <div class="ov-lbl" style="color:#fdba74">洛杉矶</div>
-        </div>
+    </div>
+    <!-- Route SVG — sits above sphere, not clipped -->
+    <svg class="ov-svg" viewBox="0 0 360 360">
+      <path id="sea-path" d="M 226 170 Q 260 230 248 210 Q 190 290 74 170" fill="none" stroke="rgba(56,189,248,.65)" stroke-width="1.8" stroke-dasharray="7 5">
+        <animate attributeName="stroke-dashoffset" from="340" to="0" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <path id="air-path" d="M 226 170 Q 164 68 74 170" fill="none" stroke="rgba(167,139,250,.5)" stroke-width="1.4" stroke-dasharray="4 7">
+        <animate attributeName="stroke-dashoffset" from="280" to="0" dur="5s" repeatCount="indefinite"/>
+      </path>
+      <circle r="5" fill="#38bdf8" opacity=".95">
+        <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#sea-path"/></animateMotion>
+      </circle>
+      <circle r="3.5" fill="#a78bfa" opacity=".9">
+        <animateMotion dur="3.5s" repeatCount="indefinite"><mpath href="#air-path"/></animateMotion>
+      </circle>
+    </svg>
+    <!-- City nodes — sit outside sphere, not clipped by overflow:hidden -->
+    <div class="ov-nodes">
+      <div class="ov-node" style="top:47%;left:63%">
+        <div class="ov-pulse" style="background:rgba(99,102,241,.45)"></div>
+        <div class="ov-dot" style="background:#6366f1;color:#6366f1"></div>
+        <div class="ov-lbl" style="color:#a5b4fc">景德镇</div>
       </div>
-      <svg class="ov-svg" viewBox="0 0 340 340">
-        <path id="sea-path" d="M 204 168 Q 185 148 140 143 Q 100 140 61 155" fill="none" stroke="rgba(56,189,248,.6)" stroke-width="1.6" stroke-dasharray="5 4">
-          <animate attributeName="stroke-dashoffset" from="200" to="0" dur="3.5s" repeatCount="indefinite"/>
-        </path>
-        <path id="air-path" d="M 204 168 Q 172 95 61 155" fill="none" stroke="rgba(99,102,241,.4)" stroke-width="1.3" stroke-dasharray="3 5">
-          <animate attributeName="stroke-dashoffset" from="200" to="0" dur="4s" repeatCount="indefinite"/>
-        </path>
-        <circle r="4.5" fill="#38bdf8" opacity=".9">
-          <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#sea-path"/></animateMotion>
-        </circle>
-        <circle r="3" fill="#6366f1" opacity=".8">
-          <animateMotion dur="3s" repeatCount="indefinite"><mpath href="#air-path"/></animateMotion>
-        </circle>
-      </svg>
+      <div class="ov-node" style="top:58%;left:69%">
+        <div class="ov-pulse" style="background:rgba(56,189,248,.4)"></div>
+        <div class="ov-dot" style="background:#38bdf8;color:#38bdf8"></div>
+        <div class="ov-lbl" style="color:#7dd3fc">深圳港</div>
+      </div>
+      <div class="ov-node" style="top:47%;left:20%">
+        <div class="ov-pulse" style="background:rgba(249,115,22,.4)"></div>
+        <div class="ov-dot" style="background:#f97316;color:#f97316"></div>
+        <div class="ov-lbl" style="color:#fdba74">洛杉矶</div>
+      </div>
     </div>
   </div>
   <div id="ov-info">
