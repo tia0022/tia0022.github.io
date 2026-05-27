@@ -229,6 +229,22 @@ body{background:var(--bg-deep);color:var(--text);font-family:'Noto Sans SC',sans
 @keyframes alert-pulse{from{box-shadow:none}to{box-shadow:0 0 12px rgba(248,113,113,.2)}}
 .hitl.alert .hitl-btn{border-color:var(--alert);color:var(--alert);background:rgba(248,113,113,.1)}
 .hitl.alert .hitl-btn:hover{background:var(--alert);color:#fff}
+/* ─── 观众参与选择面板 ─── */
+.choice-block{border:1px solid rgba(248,113,113,.35);border-radius:10px;padding:14px 16px;background:rgba(248,113,113,.04);animation:alert-pulse 1.2s ease-in-out infinite alternate}
+.choice-q{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px;color:var(--text)}
+.choice-q .cq-badge{font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(248,113,113,.18);color:#f87171;border:1px solid rgba(248,113,113,.3);text-transform:uppercase;letter-spacing:.08em}
+.choices{display:grid;gap:8px}
+.choice-card{border:1.5px solid var(--border);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all 200ms;background:var(--bg-2);display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start}
+.choice-card:hover{border-color:var(--cc,#6366f1);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.choice-card.selected{border-color:#22c55e;background:rgba(34,197,94,.06);animation:none}
+.choice-card.rejected{opacity:.28;pointer-events:none;filter:grayscale(1)}
+.choice-card.ai-pick::after{content:'← AI 也选这个';font-size:10px;color:#22c55e;font-family:'JetBrains Mono',monospace;grid-column:2;margin-top:3px}
+.choice-card.wrong-pick::after{content:'风险过高，AI 建议切换';font-size:10px;color:#f87171;font-family:'JetBrains Mono',monospace;grid-column:2;margin-top:3px}
+.cc-icon{font-size:26px;grid-row:1/3;line-height:1.3}
+.cc-title{font-size:14px;font-weight:700;line-height:1.3}
+.cc-meta{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.5;grid-column:2}
+.choice-result{margin-top:8px;padding:8px 12px;border-radius:7px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);font-size:12px;color:#86efac;display:none;align-items:center;gap:8px}
+.choice-result.warn{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.25);color:#fca5a5}
 
 /* ─── ANALYST / DASHBOARD ─── */
 .wf-area{background:var(--bg-3);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
@@ -1210,6 +1226,71 @@ function wsHTML(id,header,results,outputs,tech,hitl){
   </div>`:''}`;
 }
 
+function makeChoice(blockId, idx, aiIdx, agentId){
+  const block = document.getElementById('choice-block-'+blockId);
+  if(!block || block.dataset.chosen) return;
+  block.dataset.chosen = '1';
+  block.style.animation = 'none';
+  const cards = block.querySelectorAll('.choice-card');
+  cards.forEach((c,i)=>{
+    if(i===idx) c.classList.add('selected');
+    else c.classList.add('rejected');
+  });
+  const isRight = (idx===aiIdx);
+  // show AI reasoning after 700ms
+  setTimeout(()=>{
+    if(idx!==aiIdx) cards[aiIdx]?.classList.add('ai-pick');
+    else cards[idx]?.classList.add('ai-pick');
+    const res = document.getElementById('choice-result-'+blockId);
+    if(res){
+      res.style.display='flex';
+      if(isRight){
+        res.innerHTML='✓ 你和 AI 想法一致！最优解：切换空运，净利仍 ¥164/杯，时效快 9 天';
+      } else {
+        res.classList.add('warn');
+        res.innerHTML='⚠ AI 不建议这样做 — 罢工概率 87%，继续海运风险极高，已为你切换至最优方案';
+      }
+      res.animate([{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,fill:'forwards'});
+    }
+  },700);
+  // reveal HITL after 1.6s
+  setTimeout(()=>{
+    const hitl = document.getElementById('hitl-'+agentId);
+    if(hitl){
+      hitl.style.display='flex';
+      hitl.animate([{opacity:0},{opacity:1}],{duration:500,fill:'forwards'});
+    }
+  },1800);
+}
+
+function makeMktChoice(idx){
+  const wrap = document.getElementById('mkt-choice');
+  if(!wrap || wrap.dataset.chosen) return;
+  wrap.dataset.chosen='1';
+  wrap.style.animation='none';
+  const labels=['茶道/手工艺','美食/生活','时尚/美妆'];
+  const hits=['命中率 18%，最高！','命中率 7%，可追加','命中率 4%，不建议'];
+  const cards = wrap.querySelectorAll('.choice-card');
+  cards.forEach((c,i)=>{
+    if(i===idx) c.classList.add('selected');
+    else c.classList.add('rejected');
+  });
+  setTimeout(()=>{
+    cards[0].classList.add('ai-pick');
+    const res = document.getElementById('mkt-choice-result');
+    if(res){
+      res.style.display='flex';
+      if(idx===0){
+        res.innerHTML='✓ 精准！茶道类达人与景德镇茶杯高度匹配，命中率 18%（行业均值 3%）';
+      } else {
+        res.classList.add('warn');
+        res.innerHTML=`AI 建议优先锁定茶道/手工艺类（${hits[0]}），${labels[idx]}类（${hits[idx]}）作为追加预算`;
+      }
+      res.animate([{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,fill:'forwards'});
+    }
+  },700);
+}
+
 function confirmHITL(id){
   const btn=document.getElementById('hbtn-'+id);
   const box=document.getElementById('hitl-'+id);
@@ -1220,8 +1301,8 @@ function confirmHITL(id){
   if(id==='log'){
     setTimeout(()=>{
       showToast('risk');
-      document.getElementById('screen-log').querySelector('.bignum').textContent='广州→LA 空运';
-      document.getElementById('screen-log').querySelector('.bignum').nextElementSibling?.querySelector('.stmt')?.setAttribute('style','');
+      const bn = document.getElementById('screen-log')?.querySelector('.bignum');
+      if(bn) bn.textContent='广州→LA ✓';
     },500);
   }
 }
@@ -1272,6 +1353,35 @@ function buildWorkstations(){
     ],
     {icon:'📋',text:'@zen.teahouse.la 等 3 位达人已接受邀约，现在确认锁定资产库并开始寄样。',btn:'锁定资产库 ▶'}
   );
+  // inject influencer type choice BEFORE hitl
+  const mktWs = document.getElementById('ws-mkt');
+  const mktHitl = document.getElementById('hitl-mkt');
+  mktWs.insertBefore(Object.assign(document.createElement('div'),{
+    innerHTML:`<div class="choice-block" id="mkt-choice">
+      <div class="choice-q">
+        <span class="cq-badge">🙋 你来选</span>
+        500 只茶杯要推给洛杉矶买家——你会优先找哪类 KOL？
+      </div>
+      <div class="choices" style="grid-template-columns:repeat(3,1fr)">
+        <div class="choice-card" style="--cc:#f97316" onclick="makeMktChoice(0)">
+          <div class="cc-icon">🍵</div>
+          <div class="cc-title">茶道/手工艺</div>
+          <div class="cc-meta">1w-50w 粉丝<br>文化垂类</div>
+        </div>
+        <div class="choice-card" style="--cc:#ec4899" onclick="makeMktChoice(1)">
+          <div class="cc-icon">🥗</div>
+          <div class="cc-title">美食/生活方式</div>
+          <div class="cc-meta">10w+ 粉丝<br>泛生活类</div>
+        </div>
+        <div class="choice-card" style="--cc:#a78bfa" onclick="makeMktChoice(2)">
+          <div class="cc-icon">💄</div>
+          <div class="cc-title">时尚/美妆</div>
+          <div class="cc-meta">50w+ 粉丝<br>高流量</div>
+        </div>
+      </div>
+      <div class="choice-result" id="mkt-choice-result"></div>
+    </div>`
+  }), mktHitl);
 
   // Compliance
   document.getElementById('ws-comp').innerHTML=wsHTML('comp',
@@ -1316,8 +1426,39 @@ function buildWorkstations(){
       {k:'响应时长',v:'异常识别 2min · 方案生成 8min · 推送 5min = 15min'},
       {k:'监控覆盖',v:'500+ 承运商 · 24h 不间断 · ETA 偏离 ±12h 自动预警'}
     ],
-    {icon:'🚨',text:'LBP 港口工人罢工概率 P=0.87，建议首批切广州→LA 空运。溢价 $12/kg，时效快 9 天，净利仍为正。',btn:'确认切换空运 ▶',alert:true}
+    null  // HITL hidden, shown after choice
   );
+  // inject choice panel + hide hitl until choice made
+  document.getElementById('ws-log').insertAdjacentHTML('beforeend',`
+  <div class="choice-block" id="choice-block-log">
+    <div class="choice-q">
+      <span class="cq-badge">🙋 你来决定</span>
+      现在是 T+7d，盐田港罢工概率 87%。你会怎么做？
+    </div>
+    <div class="choices" style="grid-template-columns:repeat(3,1fr)">
+      <div class="choice-card" style="--cc:#38bdf8" onclick="makeChoice('log',0,1,'log')">
+        <div class="cc-icon">🚢</div>
+        <div class="cc-title">继续海运</div>
+        <div class="cc-meta">$3.2/kg · 13天<br>省钱但有风险</div>
+      </div>
+      <div class="choice-card" style="--cc:#34d399" onclick="makeChoice('log',1,1,'log')">
+        <div class="cc-icon">✈️</div>
+        <div class="cc-title">切换空运</div>
+        <div class="cc-meta">$15.2/kg · 4天<br>贵但时效快</div>
+      </div>
+      <div class="choice-card" style="--cc:#f59e0b" onclick="makeChoice('log',2,1,'log')">
+        <div class="cc-icon">⏳</div>
+        <div class="cc-title">等待观望</div>
+        <div class="cc-meta">24h 后再决定<br>可能错过时机</div>
+      </div>
+    </div>
+    <div class="choice-result" id="choice-result-log"></div>
+  </div>
+  <div class="hitl alert" id="hitl-log" style="display:none">
+    <span class="hitl-ic">🚨</span>
+    <span class="hitl-txt">AI 建议：广州→LA 空运，溢价 $12/kg，时效快 9 天，净利仍为正。</span>
+    <button class="hitl-btn" id="hbtn-log" onclick="confirmHITL('log')">确认切换空运 ▶</button>
+  </div>`);
 
   // Analyst (includes profit dashboard)
   document.getElementById('ws-ana').innerHTML=`
