@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Project placeholder">
+  <rect width="1200" height="800" fill="#f7f8fb"/>
+  <rect x="84" y="76" width="1032" height="648" rx="36" fill="#fff" stroke="#dbe3ee" stroke-width="3"/>
+  <rect x="150" y="142" width="900" height="70" rx="35" fill="#111827"/>
+  <text x="190" y="187" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">Product Landing Page</text>
+  <rect x="150" y="286" width="470" height="62" rx="31" fill="#2563eb"/>
+  <rect x="150" y="374" width="610" height="26" rx="13" fill="#94a3b8"/>
+  <rect x="150" y="424" width="520" height="26" rx="13" fill="#cbd5e1"/>
+  <rect x="150" y="514" width="190" height="58" rx="29" fill="#111827"/>
+  <rect x="366" y="514" width="190" height="58" rx="29" fill="#eef2f8" stroke="#dbe3ee"/>
+  <rect x="720" y="296" width="300" height="270" rx="28" fill="#fef3c7" stroke="#fde68a"/>
+  <rect x="766" y="342" width="208" height="34" rx="17" fill="#111827"/>
+  <rect x="766" y="410" width="160" height="24" rx="12" fill="#b56a10"/>
+  <rect x="766" y="460" width="196" height="24" rx="12" fill="#d97706" opacity=".55"/>
+  <text x="600" y="666" text-anchor="middle" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Replace with a real product screenshot</text>
+</svg>

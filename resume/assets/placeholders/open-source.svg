@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Open source placeholder">
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  <rect x="72" y="72" width="1056" height="656" rx="34" fill="#ffffff" stroke="#dbe3ee" stroke-width="3"/>
+  <rect x="72" y="72" width="1056" height="76" rx="34" fill="#111827"/>
+  <circle cx="128" cy="110" r="10" fill="#ef4444"/>
+  <circle cx="162" cy="110" r="10" fill="#f59e0b"/>
+  <circle cx="196" cy="110" r="10" fill="#10b981"/>
+  <rect x="128" y="206" width="390" height="34" rx="17" fill="#111827"/>
+  <rect x="128" y="268" width="780" height="22" rx="11" fill="#cbd5e1"/>
+  <rect x="128" y="316" width="640" height="22" rx="11" fill="#cbd5e1"/>
+  <rect x="128" y="386" width="226" height="82" rx="18" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="162" y="438" fill="#2563eb" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Stars</text>
+  <rect x="386" y="386" width="226" height="82" rx="18" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="420" y="438" fill="#0f8f6b" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Issues</text>
+  <rect x="644" y="386" width="226" height="82" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="678" y="438" fill="#b56a10" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Docs</text>
+  <path d="M190 590h240m-192-52 52 52-52 52m522-104-52 52 52 52" fill="none" stroke="#2563eb" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="510" y="560" width="180" height="60" rx="30" fill="#111827"/>
+  <text x="600" y="601" text-anchor="middle" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800">README</text>
+</svg>

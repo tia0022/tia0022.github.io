@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Research placeholder">
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  <rect x="96" y="76" width="1008" height="648" rx="34" fill="#fff" stroke="#dbe3ee" stroke-width="3"/>
+  <text x="160" y="160" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="850">Research Evidence</text>
+  <rect x="160" y="220" width="360" height="22" rx="11" fill="#94a3b8"/>
+  <circle cx="330" cy="452" r="80" fill="#eff6ff" stroke="#2563eb" stroke-width="10"/>
+  <circle cx="600" cy="350" r="80" fill="#f0fdf4" stroke="#0f8f6b" stroke-width="10"/>
+  <circle cx="870" cy="500" r="80" fill="#fff7ed" stroke="#b56a10" stroke-width="10"/>
+  <path d="M408 430 522 376M676 386l118 78" stroke="#64748b" stroke-width="14" stroke-linecap="round"/>
+  <text x="330" y="464" text-anchor="middle" fill="#2563eb" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="850">Data</text>
+  <text x="600" y="362" text-anchor="middle" fill="#0f8f6b" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="850">Method</text>
+  <text x="870" y="512" text-anchor="middle" fill="#b56a10" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="850">Result</text>
+  <rect x="214" y="620" width="772" height="28" rx="14" fill="#dbe3ee"/>
+</svg>

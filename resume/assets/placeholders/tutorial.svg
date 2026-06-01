@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Tutorial placeholder">
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  <rect x="112" y="84" width="976" height="632" rx="34" fill="#fff" stroke="#dbe3ee" stroke-width="3"/>
+  <text x="174" y="170" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="850">Tutorial / Guide</text>
+  <rect x="174" y="230" width="430" height="26" rx="13" fill="#94a3b8"/>
+  <rect x="174" y="282" width="700" height="18" rx="9" fill="#cbd5e1"/>
+  <rect x="174" y="324" width="610" height="18" rx="9" fill="#cbd5e1"/>
+  <rect x="174" y="402" width="360" height="170" rx="24" fill="#111827"/>
+  <text x="218" y="468" fill="#10b981" font-family="Menlo, Consolas, monospace" font-size="26" font-weight="700">&gt; install</text>
+  <text x="218" y="520" fill="#93c5fd" font-family="Menlo, Consolas, monospace" font-size="26" font-weight="700">&gt; build</text>
+  <rect x="610" y="402" width="330" height="170" rx="24" fill="#eff6ff"/>
+  <path d="M692 488h166m-70-70 70 70-70 70" fill="none" stroke="#2563eb" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="174" y="626" width="760" height="24" rx="12" fill="#dbe3ee"/>
+</svg>

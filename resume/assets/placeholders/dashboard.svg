@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Dashboard placeholder">
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  <rect x="80" y="80" width="1040" height="640" rx="30" fill="#fff" stroke="#dbe3ee" stroke-width="3"/>
+  <rect x="80" y="80" width="220" height="640" rx="30" fill="#111827"/>
+  <rect x="130" y="150" width="120" height="24" rx="12" fill="#64748b"/>
+  <rect x="130" y="220" width="120" height="42" rx="12" fill="#2563eb"/>
+  <rect x="130" y="292" width="120" height="24" rx="12" fill="#475569"/>
+  <rect x="130" y="346" width="120" height="24" rx="12" fill="#475569"/>
+  <rect x="360" y="150" width="220" height="110" rx="20" fill="#eff6ff"/>
+  <text x="398" y="218" fill="#2563eb" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850">+40%</text>
+  <rect x="620" y="150" width="220" height="110" rx="20" fill="#f0fdf4"/>
+  <text x="658" y="218" fill="#0f8f6b" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850">92%</text>
+  <rect x="880" y="150" width="170" height="110" rx="20" fill="#fff7ed"/>
+  <text x="918" y="218" fill="#b56a10" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="850">2s</text>
+  <polyline points="370,560 470,480 570,515 670,410 770,452 870,330 1010,370" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="360" y="610" width="690" height="28" rx="14" fill="#cbd5e1"/>
+</svg>

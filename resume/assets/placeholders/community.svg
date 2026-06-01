@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Community placeholder">
+  <rect width="1200" height="800" fill="#f8fafc"/>
+  <rect x="82" y="90" width="1036" height="620" rx="36" fill="#ffffff" stroke="#dbe3ee" stroke-width="3"/>
+  <text x="140" y="176" fill="#111827" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="850">Community Proof</text>
+  <rect x="140" y="224" width="360" height="130" rx="24" fill="#eff6ff"/>
+  <text x="178" y="284" fill="#2563eb" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850">Audience</text>
+  <text x="178" y="324" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Followers / Users</text>
+  <rect x="540" y="224" width="260" height="130" rx="24" fill="#f0fdf4"/>
+  <text x="578" y="284" fill="#0f8f6b" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850">Talks</text>
+  <text x="578" y="324" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Events / Demos</text>
+  <rect x="840" y="224" width="218" height="130" rx="24" fill="#fff7ed"/>
+  <text x="878" y="284" fill="#b56a10" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850">Wins</text>
+  <text x="878" y="324" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Awards</text>
+  <circle cx="230" cy="500" r="54" fill="#2563eb"/>
+  <circle cx="370" cy="500" r="54" fill="#0f8f6b"/>
+  <circle cx="510" cy="500" r="54" fill="#b56a10"/>
+  <circle cx="650" cy="500" r="54" fill="#7357c8"/>
+  <circle cx="790" cy="500" r="54" fill="#167c91"/>
+  <circle cx="930" cy="500" r="54" fill="#c54646"/>
+  <path d="M230 500h700" stroke="#dbe3ee" stroke-width="12" stroke-linecap="round"/>
+  <rect x="170" y="610" width="860" height="28" rx="14" fill="#cbd5e1"/>
+</svg>
